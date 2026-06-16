@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huang Jinghan | Portfolio Narrative</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=LXGW+WenKai&family=PingFang+SC&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --primary: #f2c787; 
+            --secondary: #5dadf5;
+            --text: #111827; 
+            --line: #E5E7EB;
+            --orbit-path: #555955; 
+        }
+
+        .dark {
+            --bg: #0B1220;
+            --card: #111827;
+            --primary: #f2c787; 
+            --secondary: #5dadf5;
+            --text: #F9FAFB; 
+            --line: #1E293B;
+            --orbit-path: #374151; 
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(242, 199, 135, 0.3);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(242, 199, 135, 0.6);
+        }
+
+        .en-font { font-family: 'Parisienne', cursive; }
+        .wenkai-font { font-family: 'LXGW WenKai', 'PingFang SC', serif; letter-spacing: 0.04em; }
+
+        body, a, button, [onclick], .orbit-item, textarea, .about-card, .game-card-node, .video-card-node, .folder-wrapper {
+            cursor: none !important;
+        }
+
+        #magic-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            background: rgba(39, 97, 255, 0.25);
+            border: 1.5px solid rgba(39, 97, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(1px);
+            transition: transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1), background 0.3s, width 0.3s, height 0.3s;
+        }
+        
+        #cursor-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background-color: rgba(93, 173, 245, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+        }
+
+        .capsule-nav {
+            position: fixed !important;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 999px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.02);
+            max-width: 850px; 
+            width: 80%;
+            z-index: 1000;
+        }
+        .dark .capsule-nav {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-item-active {
+            background-color: #111827 !important;
+            color: #FFFFFF !important;
+        }
+        .dark .nav-item-active {
+            background-color: #F9FAFB !important;
+            color: #111827 !important;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 12px 12px 24px 12px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .dark .polaroid { background: #1E293B; }
+
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            color: var(--primary);
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .typing-active { color: var(--text) !important; }
+        .typing-finished { color: var(--text) !important; transition: color 0.3s ease; }
+
+        .modal-overlay {
+            backdrop-filter: blur(8px);
+            background: rgba(11, 18, 32, 0.4);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #click-spark-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        
+        .about-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            transform-style: preserve-3d;
+        }
+        .about-card:hover .about-card-inner { transform: rotateY(180deg); }
+        .about-card-front, .about-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+        }
+        .about-card-back { transform: rotateY(180deg); }
+
+        .orbit-container {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow: visible;
+        }
+        .orbit-scaling-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .orbit-path-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .orbit-item {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255,255,255,0.25);
+            will-change: transform, z-index;
+            user-select: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .orbit-item:hover {
+            box-shadow: 0 0 20px var(--primary);
+            border-color: var(--primary);
+        }
+        .orbit-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .game-grid-container {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        @media (min-width: 640px) { .game-grid-container { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .game-grid-container { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        
+        .game-card-node {
+            position: relative;
+            border-radius: 16px;
+            height: auto; 
+            overflow: hidden;
+            background: var(--card);
+            border: 1px solid rgba(242, 199, 135, 0.15);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s;
+        }
+        .game-card-node:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -15px rgba(242, 199, 135, 0.25);
+            border-color: var(--primary);
+        }
+
+        .video-grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .video-card-node {
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(93, 173, 245, 0.12);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        @media (min-width: 768px) {
+            .video-card-node { flex-direction: row; height: 210px; }
+        }
+        .video-card-node:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 15px 35px -10px rgba(93, 173, 245, 0.18);
+        }
+        .video-preview-shell {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background: #000;
+        }
+        @media (min-width: 768px) {
+            .video-preview-shell { width: 340px; height: 100%; }
+        }
+        .video-preview-shell img {
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .video-card-node:hover .video-preview-shell img {
+            transform: scale(1.08);
+            opacity: 0.85;
+        }
+
+        .iphone-frame {
+            border: 12px solid #22252a;
+            border-radius: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        .iphone-island {
+            width: 90px;
+            height: 24px;
+            background: #22252a;
+            border-radius: 20px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        .app-waterfall::-webkit-scrollbar { width: 4px; }
+        .app-waterfall::-webkit-scrollbar-thumb { background: rgba(39, 97, 255, 0.3); border-radius: 999px; }
+
+        .timeline-scroll-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .timeline-track-animate {
+            display: flex;
+            gap: 2.5rem;
+            width: max-content;
+            padding: 1.5rem 0.5rem;
+            animation: autoScrollReverseLinear 24s ease-in-out infinite alternate;
+        }
+        @keyframes autoScrollReverseLinear {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(calc(-100% + 100vw - 4rem), 0, 0); }
+        }
+        @media (min-width: 768px) {
+            @keyframes autoScrollReverseLinear {
+                0% { transform: translate3d(0, 0, 0); }
+                100% { transform: translate3d(calc(-100% + 100vw - 12rem), 0, 0); }
+            }
+        }
+
+        .semi-circle-stage {
+            position: relative;
+            width: 100%;
+            height: 560px; 
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .about-card {
+            position: absolute !important;
+            width: 150px;
+            height: 220px;
+            transform-origin: center 700px; 
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0.2s;
+            will-change: transform;
+        }
+        .about-card:nth-child(1) { transform: rotate(-54deg) translateY(0); z-index: 10; }
+        .about-card:nth-child(2) { transform: rotate(-42deg) translateY(0); z-index: 11; }
+        .about-card:nth-child(3) { transform: rotate(-30deg) translateY(0); z-index: 12; }
+        .about-card:nth-child(4) { transform: rotate(-18deg) translateY(0); z-index: 13; }
+        .about-card:nth-child(5) { transform: rotate(-6deg) translateY(0); z-index: 14; }
+        .about-card:nth-child(6) { transform: rotate(6deg) translateY(0); z-index: 15; }
+        .about-card:nth-child(7) { transform: rotate(18deg) translateY(0); z-index: 16; }
+        .about-card:nth-child(8) { transform: rotate(30deg) translateY(0); z-index: 17; }
+        .about-card:nth-child(9) { transform: rotate(42deg) translateY(0); z-index: 18; }
+        .about-card:nth-child(10) { transform: rotate(54deg) translateY(0); z-index: 19; }
+
+        .about-card:hover {
+            z-index: 50 !important;
+            transform: scale(1.18) rotate(var(--hover-rot, 0deg)) translateY(-40px) !important;
+        }
+        .about-card:nth-child(1):hover { --hover-rot: -54deg; }
+        .about-card:nth-child(2):hover { --hover-rot: -42deg; }
+        .about-card:nth-child(3):hover { --hover-rot: -30deg; }
+        .about-card:nth-child(4):hover { --hover-rot: -18deg; }
+        .about-card:nth-child(5):hover { --hover-rot: -6deg; }
+        .about-card:nth-child(6):hover { --hover-rot: 6deg; }
+        .about-card:nth-child(7):hover { --hover-rot: 18deg; }
+        .about-card:nth-child(8):hover { --hover-rot: 30deg; }
+        .about-card:nth-child(9):hover { --hover-rot: 42deg; }
+        .about-card:nth-child(10):hover { --hover-rot: 54deg; }
+
+        .folder-wrapper {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin: 0 auto;
+            perspective: 1200px;
+            transition: transform 0.3s ease;
+        }
+        .folder-wrapper:hover {
+            transform: scale(1.05);
+        }
+        .folder-back {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 80%;
+            background: #8ab4f8; 
+            border-radius: 0 12px 12px 12px;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
+        }
+        .folder-back::after {
+            content: '';
+            position: absolute;
+            top: -14px; left: 0;
+            width: 40%; height: 15px;
+            background: #8ab4f8;
+            border-radius: 10px 10px 0 0;
+        }
+        .folder-papers {
+            position: absolute;
+            bottom: 12%; left: 8%; right: 8%;
+            height: 70%;
+            z-index: 10;
+        }
+        .folder-paper {
+            position: absolute;
+            bottom: 0; left: 0; right: 0; top: 0;
+            background: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid #e5e7eb;
+            display: flex; flex-direction: column; gap: 6px; padding: 12px;
+        }
+        .dark .folder-paper { background: #1e293b; border-color: #374151; }
+        
+        .folder-paper::before, .folder-paper::after {
+            content: ''; height: 4px; background: #e5e7eb; border-radius: 2px;
+        }
+        .dark .folder-paper::before, .dark .folder-paper::after { background: #374151; }
+        .folder-paper::before { width: 70%; }
+        .folder-paper::after { width: 40%; }
+
+        .folder-paper-1 { transform: rotate(-2deg) translateY(0); z-index: 11; }
+        .folder-paper-2 { transform: rotate(1deg) translateY(0); z-index: 12; }
+        .folder-paper-3 { transform: rotate(-1deg) translateY(0); z-index: 13; }
+
+        .folder-front {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 80%;
+            background: #3b82f6; 
+            border-radius: 0 12px 12px 12px;
+            z-index: 20;
+            transform-origin: bottom;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 2px 10px rgba(255,255,255,0.2), 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .folder-wrapper:hover .folder-front { transform: rotateX(-25deg); }
+        .folder-wrapper:hover .folder-paper-1 { transform: rotate(-8deg) translateY(-45px); }
+        .folder-wrapper:hover .folder-paper-2 { transform: rotate(5deg) translateY(-30px); }
+        .folder-wrapper:hover .folder-paper-3 { transform: rotate(-2deg) translateY(-15px); }
+
+        #writing-gallery-container::-webkit-scrollbar { width: 4px; }
+        #writing-gallery-container::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 999px; }
+        
+        #modal-card-editor::-webkit-scrollbar { width: 4px; }
+        #modal-card-editor::-webkit-scrollbar-thumb { background: rgba(242, 199, 135, 0.5); border-radius: 999px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="click-spark-canvas"></canvas>
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-0">
+        <canvas id="pixel-blast-canvas" class="w-full h-full pointer-events-auto bg-transparent"></canvas>
+    </div>
+
+    <div id="magic-cursor"></div>
+    <div id="cursor-trail"></div>
+
+    <div class="capsule-nav px-5 py-2 flex justify-between items-center text-gray-800 dark:text-white">
+        <div class="en-font text-xl font-medium tracking-wide text-gray-900 dark:text-white select-none mr-3">
+            Profile
+        </div>
+        
+        <div class="flex items-center gap-1 md:gap-1.5 text-[11px] font-bold tracking-wider">
+            <button onclick="scrollToSection('home', this)" class="nav-item nav-item-active px-2.5 py-1 rounded-full transition-all duration-200">HOME</button>
+            <button onclick="scrollToSection('works', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">WORKS</button>
+            <button onclick="scrollToSection('projects', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">PROJECTS</button>
+            <button onclick="scrollToSection('internship', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">INTERNSHIP</button>
+            <button onclick="scrollToSection('about', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">ABOUT ME</button>
+        </div>
+
+        <div class="flex items-center gap-1.5 border-l border-gray-200 dark:border-gray-700 pl-3">
+            <button id="theme-toggle" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-xs transition-colors" title="切换主题">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:block"></i>
+            </button>
+            <button onclick="toggleLanguage()" class="text-[9px] font-bold border border-gray-300 dark:border-gray-600 px-1.5 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+                ZH / EN
+            </button>
+            <button onclick="openContactModal()" class="px-3 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full text-[11px] font-bold tracking-wider hover:opacity-90 transition-all shadow-sm">
+                CONTACT
+            </button>
+        </div>
+    </div>
+
+    <section id="home" class="w-full h-screen flex items-center justify-center px-6 md:px-20 pt-16 overflow-hidden relative bg-transparent z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full max-w-7xl relative z-10">
+            <div class="lg:col-span-5 relative h-[380px] flex items-center justify-center select-none">
+                
+                <div class="polaroid absolute w-48 h-60 rotate-[-8deg] translate-x-[-40px] translate-y-[-20px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
+                    <div class="w-full h-44 bg-gray-100 dark:bg-gray-700 rounded mb-2 overflow-hidden flex items-center justify-center relative">
+                        <i class="fa-regular fa-image text-3xl text-gray-400"></i>
+                        <img src="./assets/images/home_polaroid_1.jpg" class="absolute top-0 left-0 w-full h-full object-cover">
+                    </div>
+                    <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Visual Mind</p>
+                </div>
+
+                <div class="polaroid absolute w-48 h-60 rotate-[5deg] translate-x-[50px] translate-y-[10px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
+                    <div class="w-full h-44 bg-gray-200 dark:bg-gray-600 rounded mb-2 overflow-hidden flex items-center justify-center relative">
+                        <i class="fa-solid fa-wand-magic-sparkles text-3xl text-gray-400"></i>
+                        <img src="./assets/images/home_polaroid_2.jpg" class="absolute top-0 left-0 w-full h-full object-cover">
+                    </div>
+                    <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Coding Space</p>
+                </div>
+
+                <div class="polaroid absolute w-48 h-60 rotate-[-3deg] translate-x-[5px] translate-y-[40px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
+                    <div class="w-full h-44 bg-gray-300 dark:bg-gray-500 rounded mb-2 overflow-hidden flex items-center justify-center relative">
+                        <i class="fa-solid fa-camera-retro text-3xl text-gray-200"></i>
+                        <img src="./assets/images/home_polaroid_3.jpg" class="absolute top-0 left-0 w-full h-full object-cover">
+                    </div>
+                    <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Daily Life</p>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-7 flex flex-col space-y-5 bg-transparent">
+                <div class="min-h-[75px] md:min-h-[90px] flex flex-col justify-center">
+                    <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase mb-2">PAGE 01</div>
+                    <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight select-none text-gray-900 dark:text-white">
+                        <div id="line1" class="typing-active"></div>
+                        <div id="line2" class="mt-1"></div>
+                    </h1>
+                </div>
+                
+                <div id="intro-paragraph" class="wenkai-font text-gray-700 dark:text-white text-[13px] md:text-[14px] font-bold tracking-wide leading-relaxed space-y-2.5 border-l-2 border-[#f2c787] pl-4 transition-colors duration-300">
+                </div>
+
+                <div id="keywords-box" class="flex flex-wrap gap-2 pt-1 wenkai-font">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="works" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10">
+        <div class="max-w-7xl w-full mx-auto space-y-8">
+            <div class="space-y-1">
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase" id="works-page-tag">PAGE 02</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white" id="works-main-title">WORK</h2>
+                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200" id="works-desc-title">AI Vibecoding ——从概念到落地、从视觉到叙事</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 border-t border-b border-gray-200/30 py-4 font-bold text-sm tracking-wider flex-wrap">
+                <button onclick="switchWorkTab('visual')" id="tab-visual" class="text-left py-2 px-4 border-l-2 border-[#ba5700] text-[#ba5700] transition-all duration-300 uppercase">01 视觉设计</button>
+                <button onclick="switchWorkTab('game')" id="tab-game" class="text-left py-2 px-4 border-l-2 border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white transition-all duration-300 uppercase">02 游戏设计</button>
+                <button onclick="switchWorkTab('video')" id="tab-video" class="text-left py-2 px-4 border-l-2 border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white transition-all duration-300 uppercase">03 视频制作</button>
+                <button onclick="switchWorkTab('writing')" id="tab-writing" class="text-left py-2 px-4 border-l-2 border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white transition-all duration-300 uppercase">04 文字创作</button>
+            </div>
+
+            <div id="works-display-container" class="w-full min-h-[480px] flex items-center justify-center relative">
+                
+                <div id="panel-visual" class="w-full transition-all duration-500 block">
+                    <div class="orbit-container" id="orbit-images-container">
+                        <div class="orbit-scaling-container">
+                            <svg class="orbit-path-svg" id="orbit-svg-element">
+                                <ellipse id="dynamic-orbit-ellipse" fill="none" stroke="var(--orbit-path)" stroke-width="2" stroke-dasharray="6 4" />
+                            </svg>
+                            <div id="orbit-items-dynamic-slot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-game" class="w-full transition-all duration-500 hidden">
+                    <div class="game-grid-container">
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(0)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_1.jpg" class="w-full h-full object-cover opacity-90" alt="Game 1">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-[#f2c787] bg-[#f2c787]/10 px-2 py-0.5 rounded-md uppercase">Mechanics</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">星穹浮空王城：魔幻科幻主城场景</h4>
+                            </div>
+                        </div>
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(1)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_2.jpg" class="w-full h-full object-cover opacity-90" alt="Game 2">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md uppercase">Interface</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">深海幻城交互场景</h4>
+                            </div>
+                        </div>
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(2)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_3.jpg" class="w-full h-full object-cover opacity-90" alt="Game 3">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-md uppercase">Ecosystem</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">云涧仙峦・水墨国风</h4>
+                            </div>
+                        </div>
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(3)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_4.jpg" class="w-full h-full object-cover opacity-90" alt="Game 4">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md uppercase">Concept</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">绿野浮空境混合开放大世界</h4>
+                            </div>
+                        </div>
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(4)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_5.jpg" class="w-full h-full object-cover opacity-90" alt="Game 5">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase">Logic</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">凌霄天宫仙侠场景</h4>
+                            </div>
+                        </div>
+                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(5)">
+                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
+                                <img src="./assets/images/game_project_6.jpg" class="w-full h-full object-cover opacity-90" alt="Game 6">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-extrabold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md uppercase">Prototype</span>
+                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">青溪莲谷・隐世支线秘境</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-video" class="w-full transition-all duration-500 hidden">
+                    <div class="video-grid-container">
+                        <div class="video-card-node" onclick="openVideoPlayerModal('./assets/videos/video_source_1.mp4', '武汉城市文化记忆纪录片')">
+                            <div class="video-preview-shell flex items-center justify-center">
+                                <img src="./assets/images/video_cover_1.jpg" class="w-full h-full object-cover" alt="Video 1">
+                                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-sm shadow-lg border border-white/30 hover:scale-110 transition-transform"><i class="fa-solid fa-play"></i></div>
+                                </div>
+                            </div>
+                            <div class="flex-1 p-5 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[9px] font-bold text-blue-500 tracking-wider">DIRECTOR / EDITING</span>
+                                    <h4 class="font-extrabold text-sm text-gray-900 dark:text-white mt-0.5">武汉城市文化记忆纪录片</h4>
+                                    <p class="wenkai-font text-[11px] text-gray-500 dark:text-gray-200 mt-1 leading-relaxed">长江穿城三镇，渡口联结人间，纪录片《江·渡》立足武汉独一无二的江城特质，以 “江” 与 “渡” 双重视角，铺展一段扎根江岸的城市文化记忆。</p>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-gray-400 dark:text-gray-300 font-bold pt-3 border-t border-gray-100 dark:border-slate-800">
+                                    <span>时长: 02:45</span>
+                                    <span>软件: Premiere / DaVinci Resolve</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-writing" class="w-full transition-all duration-500 hidden">
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-12 sm:gap-24 py-16">
+                        
+                        <div class="flex flex-col items-center gap-4">
+                            <div class="folder-wrapper" onclick="openWritingModal(1)">
+                                <div class="folder-back"></div>
+                                <div class="folder-papers">
+                                    <div class="folder-paper folder-paper-3"></div>
+                                    <div class="folder-paper folder-paper-2"></div>
+                                    <div class="folder-paper folder-paper-1"></div>
+                                </div>
+                                <div class="folder-front">
+                                    <i class="fa-regular fa-folder-open text-blue-100 opacity-60 text-5xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <span class="font-extrabold text-sm text-gray-800 dark:text-white tracking-wide block" id="folder-title-1">新闻采访与公文写作</span>
+                                <span class="text-[10px] text-gray-400 mt-1 block" id="folder-sub-1">点击图片可跳转相关链接</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-4">
+                            <div class="folder-wrapper" onclick="openWritingModal(2)">
+                                <div class="folder-back"></div>
+                                <div class="folder-papers">
+                                    <div class="folder-paper folder-paper-3"></div>
+                                    <div class="folder-paper folder-paper-2"></div>
+                                    <div class="folder-paper folder-paper-1"></div>
+                                </div>
+                                <div class="folder-front">
+                                    <i class="fa-regular fa-folder-open text-blue-100 opacity-60 text-5xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <span class="font-extrabold text-sm text-gray-800 dark:text-white tracking-wide block" id="folder-title-2">论文及专业文本创作</span>
+                                <span class="text-[10px] text-gray-400 mt-1 block" id="folder-sub-2">点击图片可跳转相关链接</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10">
+        <div class="max-w-4xl w-full mx-auto space-y-12">
+            <div class="space-y-1">
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">PROJECTS</h2>
+                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200" id="proj-desc">点燃想法 &nbsp;照亮过程&nbsp; 留下温度</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-gray-200/20 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-blue-500/40">
+                    <div onclick="openIphoneModal()" class="flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 font-bold text-sm">01</div>
+                            <div>
+                                <h3 class="font-bold text-base text-gray-900 dark:text-white">自媒体创业 | 摄影创作类</h3>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 font-bold text-[10px] rounded-full">点击探索 App 视图</span>
+                            <i class="fa-solid fa-mobile-screen-button text-blue-500 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-[11px] text-gray-600 dark:text-gray-100 space-y-1.5 wenkai-font leading-relaxed">
+                        <p>• <strong>市场洞察：</strong> 捕捉校园陪拍/约拍高活跃痛点，分析建立非标服务、透明化质量标准。</p>
+                        <p>·<strong>用户运营：</strong> 搭建分层用户转化模型优化转化效率，利用vibecoding搭建小程序，通过工具化运营提升用户粘性。</p>
+                        <p>• <strong>商业增长：</strong> 建立客片及原片精修对比、全闭环交付标准SOP，三个月营收超3万+元。</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-gray-200/20 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-purple-500/40">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 select-none mb-3">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 font-bold text-sm">02</div>
+                            <div>
+                                <h3 class="font-bold text-base text-gray-900 dark:text-white">跨文化传播与网络传播研究</h3>
+                                <p class="text-xs text-gray-400 dark:text-gray-300 font-bold">国家级/省部级学术研究项目</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-bold">
+                        <div onclick="openMacTabsModal(0)" class="bg-gray-100/50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-transparent hover:border-purple-400/50 hover:bg-purple-500/5 cursor-pointer flex justify-between items-center transition-all">
+                            <span class="text-gray-600 dark:text-gray-100">• 武汉大学青年研究中心年度调研项目</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-purple-400"></i>
+                        </div>
+                        <div onclick="openMacTabsModal(1)" class="bg-gray-100/50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-transparent hover:border-purple-400/50 hover:bg-purple-500/5 cursor-pointer flex justify-between items-center transition-all">
+                            <span class="text-gray-600 dark:text-gray-100">• “一带一路”跨国企业员工跨文化适应研究</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-purple-400"></i>
+                        </div>
+                        <div onclick="openMacTabsModal(2)" class="bg-gray-100/50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-transparent hover:border-purple-400/50 hover:bg-purple-500/5 cursor-pointer flex justify-between items-center transition-all">
+                            <span class="text-gray-600 dark:text-gray-100">• 南宁国际传播一周年项目</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-purple-400"></i>
+                        </div>
+                        <div onclick="openMacTabsModal(3)" class="bg-gray-100/50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-transparent hover:border-purple-400/50 hover:bg-purple-500/5 cursor-pointer flex justify-between items-center transition-all">
+                            <span class="text-gray-600 dark:text-gray-100">• 国际跨文化用户运营项目</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-teal-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-gray-200/20 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-cyan-500/40">
+                    <div onclick="openTimelineModal()" class="flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 font-bold text-sm">03</div>
+                            <div>
+                                <h3 class="font-bold text-base text-gray-900 dark:text-white">丰富的学生干部经历</h3>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 bg-cyan-500/10 text-cyan-500 font-bold text-[10px] rounded-full">点击打开纪实编年轴</span>
+                            <i class="fa-solid fa-timeline text-cyan-500 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2.5 text-[11px] font-bold text-gray-700 dark:text-gray-100">
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-slate-800/20 p-2 rounded-xl">
+                            <span>武汉大学校研究生会综合事务部部长</span>
+                            <span class="px-2 py-0.5 bg-cyan-500 text-white text-[9px] font-extrabold rounded shadow-sm">校级</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-slate-800/20 p-2 rounded-xl">
+                            <span>武汉大学新闻与传播学院院研究生会组织部部长</span>
+                            <span class="px-2 py-0.5 bg-blue-500 text-white text-[9px] font-extrabold rounded shadow-sm">院级</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-slate-800/20 p-2 rounded-xl">
+                            <span>四川师范大学融媒体中心编辑部部长</span>
+                            <span class="px-2 py-0.5 bg-purple-500 text-white text-[9px] font-extrabold rounded shadow-sm">校级</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="internship" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10 overflow-hidden">
+        <div class="max-w-4xl w-full mx-auto space-y-12">
+            <div class="space-y-1">
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 04</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">INTERNSHIP</h2>
+                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200">从执行到思考，把每一天都变成可复用的经验</p>
+            </div>
+
+            <div class="timeline-scroll-wrapper border-y border-gray-200/10 py-4">
+                <div class="timeline-track-animate">
+                    
+                    <div class="w-[310px] md:w-[340px] bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-200/20 p-5 rounded-2xl shadow-md relative hover:border-blue-500/30 transition-all">
+                        <div class="absolute -top-3 left-5 bg-blue-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow">2025.06 - 2025.10</div>
+                        <h3 class="font-extrabold text-sm text-gray-900 dark:text-white mt-1">京东 - 京东零售 - 京喜事业部</h3>
+                        <p class="text-xs text-blue-500 font-bold mb-2">电商产品运营</p>
+                        <ul class="text-[11px] text-gray-500 dark:text-slate-200 space-y-1 list-disc pl-4 font-semibold leading-relaxed">
+                            <li>独立负责京喜时尚14个核心品类频道日常运营，保障100+场直播及大促完美落地。</li>
+                            <li>针对特价频道建立"高消耗引流+高利润爆品"策略，推动GMV环比大增21.7%。</li>
+                            <li>主导建立提报统一选品入口与分级坑位提报sop，使单场SKU提升200%，缩减40%提报时间损耗。</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-1 mt-2.5">
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">品类频道运营</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">直播运营</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">SOP 优化</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">数据优化</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">产品优化</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">电商运营</span>
+                        </div>
+                    </div>
+
+                    <div class="w-[310px] md:w-[340px] bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-200/20 p-5 rounded-2xl shadow-md relative hover:border-purple-500/30 transition-all">
+                        <div class="absolute -top-3 left-5 bg-purple-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow">2024.04 - 2024.10</div>
+                        <h3 class="font-extrabold text-sm text-gray-900 dark:text-white mt-1">中海地产 (中建集团) - 市场营销部</h3>
+                        <p class="text-xs text-purple-500 font-bold mb-2">品牌营销策划</p>
+                        <ul class="text-[11px] text-gray-500 dark:text-slate-200 space-y-1 list-disc pl-4 font-semibold leading-relaxed">
+                            <li>负责社交媒体全渠道多模态图文与视频创意产出，通过精构A/B测试引爆抖音单视频获赞3.5w+。</li>
+                            <li>深度共创中海寰宇天下「武汉之眼」大型城市展，设计"记忆盲盒"爆款社交模型引爆年轻人UGC裂变。</li>
+                            <li>统筹社群运营及摄影创意大赛用户共创，活动参与度高达76.4%。</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-1 mt-2.5">
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">社媒内容创作</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">品牌活动策划</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">UGC 裂变</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">社群运营</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">用户共创</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">品牌整合营销</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">多模态内容生产</span>
+                        </div>
+                    </div>
+
+                    <div class="w-[310px] md:w-[340px] bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-200/20 p-5 rounded-2xl shadow-md relative hover:border-cyan-500/30 transition-all">
+                        <div class="absolute -top-3 left-5 bg-cyan-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow">2023.05 - 2023.09</div>
+                        <h3 class="font-extrabold text-sm text-gray-900 dark:text-white mt-1">去哪儿网 - 目的地事业部</h3>
+                        <p class="text-xs text-cyan-500 font-bold mb-2">内容运营</p>
+                        <ul class="text-[11px] text-gray-500 dark:text-slate-200 space-y-1 list-disc pl-4 font-semibold leading-relaxed">
+                            <li>负责酒店业务线4-6个小红书新媒体内容矩阵布局，应用AI优化内容素材多渠道曝光跃升40%。</li>
+                            <li>进行新榜数据透视与归因建模，提炼"路线图+价格区间tag"高点击公式，提升互动率15.2%。</li>
+                            <li>实现社群增长，主导"酒店体验官"等活动收集300+核心真实反馈，笔记整体收藏率22.37%。</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-1 mt-2.5">
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">小红书运营</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">AI 内容优化</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">数据透视</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">社群增长运营</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">活动策划</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-xs font-bold text-center">
+                <div class="bg-white/50 dark:bg-slate-900/40 p-4 rounded-xl border border-gray-200/20 shadow-sm">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-2 text-sm">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div class="text-gray-900 dark:text-white text-[13px] font-extrabold">数据决策</div>
+                </div>
+                <div class="bg-white/50 dark:bg-slate-900/40 p-4 rounded-xl border border-gray-200/20 shadow-sm">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-2 text-sm">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="text-gray-900 dark:text-white text-[13px] font-extrabold">商业敏感</div>
+                </div>
+                <div class="bg-white/50 dark:bg-slate-900/40 p-4 rounded-xl border border-gray-200/20 shadow-sm">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto mb-2 text-sm">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <div class="text-gray-900 dark:text-white text-[13px] font-extrabold">营销创意</div>
+                </div>
+                <div class="bg-white/50 dark:bg-slate-900/40 p-4 rounded-xl border border-gray-200/20 shadow-sm">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto mb-2 text-sm">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <div class="text-gray-900 dark:text-white text-[13px] font-extrabold">用户导向</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10 overflow-hidden">
+        <div class="max-w-7xl w-full mx-auto space-y-4">
+            <div class="space-y-1">
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 05</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">ABOUT ME</h2>
+                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200">手工、阅读、徒步……每一份热爱都是我与世界对话的语言</p>
+            </div>
+
+            <div class="semi-circle-stage">
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_01.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Handmade</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">各类手工（手串、拼豆等）</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">将散落的色彩编码成可佩戴的微小叙事。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_02.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Acoustic</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">神秘学爱好者</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">在理性边界外搭建通往潜意识迷宫的隐喻桥梁。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_03.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Explore</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">旷野踪迹</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">徒步、登山，在冰川、山地中读取地理的浪漫史诗。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_04.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Cuisine</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">光影定格</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">热爱摄影，通过取景框的纪录，让瞬间的记忆成永恒的情感切片。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_05.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Design</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">游戏</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">亲手编织只属于我的叙事弧线。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_06.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Thinker</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">博物馆</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">文明切片与时空压缩，在静默展柜前解码千年回响的暗语。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_07.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Game</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">绘画</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">颜料与笔触的共谋，在二维平面引爆三维的情绪星云。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_08.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Reading</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">kpop文化</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">追Kpop的日子用汗水与热爱把梦想淬炼成舞台上的滚烫光芒。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_09.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Connection</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">悬疑解谜</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">沉浸于悬疑阅读的迷宫，在解谜的刀锋上打磨出严密的逻辑链条。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-inner">
+                    <div class="about-card-front polaroid w-full h-full">
+                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                            <img src="./assets/images/page05_about_card_10.pg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">The Future</p>
+                    </div>
+                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">Future Loading...</h4>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">永远保持对未知的好奇与敬畏，编写未完待续的人生。</p>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+
+            <div class="text-center py-2 select-none border-t border-gray-200/10">
+                <p class="text-lg md:text-xl font-medium tracking-wide italic text-gray-400 dark:text-gray-300 transition-transform duration-300 hover:translate-y-[-2px]" id="about-footer-quote">
+                    "Everything I create begins with observation."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="iphone-modal" class="fixed inset-0 z-[2500] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeIphoneModal()">
+        <div class="w-[340px] h-[640px] bg-slate-900 text-slate-900 iphone-frame p-2 flex flex-col relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="iphone-island"></div>
+            <button onclick="closeIphoneModal()" class="absolute top-4 right-5 text-gray-400 hover:text-white text-base z-50">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+            <div class="w-full h-full bg-slate-50 rounded-[28px] overflow-hidden pt-10 px-3 pb-3 flex flex-col shadow-inner">
+                <div class="text-center border-b border-gray-200 pb-2 mb-3">
+                    <h4 class="text-xs font-bold text-blue-600 tracking-wider flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-cookie-bite text-amber-500"></i>
+                        <a href="https://www.xiaohongshu.com/user/profile/67376e5a000000001c018ea4?xsec_token=ABYo6HI-17Ch7SGuQ4G_1Tnjb2n_fu3jCw0b2Zb_CKhuc%3D&xsec_source=pc_search" target="_blank" class="hover:underline hover:text-blue-800 transition-colors">黄油小饼（拍照版）</a>
+                    </h4>
+                </div>
+                <div class="flex-1 overflow-y-auto app-waterfall space-y-4 pr-0.5">
+                    <div class="bg-white border border-gray-200 rounded-xl p-2.5 shadow-sm flex flex-col gap-2">
+                        <div class="w-full aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden relative">
+                            <img src="./assets/images/page03_app_01.jpg" class="w-full h-full object-cover" alt="摄影客片">
+                            <span class="absolute top-1.5 left-1.5 bg-blue-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow">真实客片</span>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-end pt-1">
+                            <h5 class="text-[10px] font-extrabold text-gray-900 leading-tight">校园陪拍 & 约拍需求验证</h5>
+                            <p class="text-[9px] text-gray-500 mt-0.5 leading-tight line-clamp-2">分析校园流量红利，定位高转化，沉淀“所见即所得”视觉感知机制。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-xl p-2.5 shadow-sm flex flex-col gap-2">
+                        <div class="w-full aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden relative">
+                            <img src="./assets/images/page03_app_02.jpg" class="w-full h-full object-cover" alt="SOP">
+                            <span class="absolute top-1.5 left-1.5 bg-emerald-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow">服务产品化</span>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-end pt-1">
+                            <h5 class="text-[10px] font-extrabold text-gray-900 leading-tight">服务型标准化协议 SOP</h5>
+                            <p class="text-[9px] text-gray-500 mt-0.5 leading-tight line-clamp-2">报价电子协议规范 → 定金拍摄流程 → 交付机制，工具化提留降低客户决策成本。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-xl p-2.5 shadow-sm flex flex-col gap-2">
+                        <div class="w-full aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden relative">
+                            <img src="./assets/images/page03_app_03.jpg" class="w-full h-full object-cover" alt="增长">
+                            <span class="absolute top-1.5 left-1.5 bg-purple-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow">营收增长</span>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-end pt-1">
+                            <h5 class="text-[10px] font-extrabold text-gray-900 leading-tight">用户分层与模型沉淀</h5>
+                            <p class="text-[9px] text-gray-500 mt-0.5 leading-tight line-clamp-2">精构A/B/C裂变转化，早鸟机制等福利加持促升CVR 28%，三月变现超3万+。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mactabs-modal" class="fixed inset-0 z-[2500] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeMacTabsModal()">
+        <div class="w-[680px] h-[460px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="bg-gray-100 dark:bg-slate-950 px-4 py-2.5 flex items-center border-b border-gray-200 dark:border-gray-800">
+                <div class="flex gap-1.5 mr-4">
+                    <span class="w-3 h-3 rounded-full bg-red-400 block cursor-pointer" onclick="closeMacTabsModal()"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-400 block"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-400 block"></span>
+                </div>
+                <div class="text-xs font-bold text-gray-500 flex items-center gap-1"><i class="fa-solid fa-folder-open"></i> Cross-Cultural Research Lab / 跨文化学术科研仓</div>
+            </div>
+            <div class="flex-1 flex overflow-hidden">
+                <div class="w-48 bg-gray-50 dark:bg-slate-950/40 border-r border-gray-200 dark:border-gray-800 p-2 flex flex-col gap-1 overflow-y-auto">
+                    <button onclick="switchMacTab(0)" class="mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all bg-purple-500 text-white">① 青年研究中心年度调研</button>
+                    <button onclick="switchMacTab(1)" class="mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800">② 一带一路跨国企业适应</button>
+                    <button onclick="switchMacTab(2)" class="mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800">③ 南宁国际传播一周年</button>
+                    <button onclick="switchMacTab(3)" class="mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800">④ 国际跨文化用户运营</button>
+                </div>
+                <div class="flex-1 p-5 overflow-y-auto text-xs space-y-4">
+                    <div class="mac-pane block space-y-2">
+                        <span class="px-2 py-0.5 bg-blue-500/10 text-blue-500 font-bold text-[9px] rounded">学院唯一立项 / 第一作者发表</span>
+                        <h4 class="font-extrabold text-sm text-gray-900 dark:text-white">武汉大学青年研究中心年度调研项目（校级项目负责人）</h4>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>项目管理：</strong>组建7人跨学科团队，负责全流程规划。同名论文以第一作者发表于“2025清华国家形象论坛”。</p>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>定量研究：</strong>问卷回收 N=1200、开展20场深度访谈，运用SPSS与NVivo归因建模，构建“跨文化友谊动态生成机制模型”。</p>
+                    </div>
+                    <div class="mac-pane hidden space-y-2">
+                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 font-bold text-[9px] rounded">省级核心成员 / 4万字行业精撰</span>
+                        <h4 class="font-extrabold text-sm text-gray-900 dark:text-white">“一带一路”跨国企业员工跨文化适应研究</h4>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>大数据挖掘：</strong>使用 Python 在海外社交平台开展文本挖掘与多模态话语分析，解析异质背景下员工行为动因与融合路径。</p>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>内容产出：</strong>系统提炼“试探→协作→信任→适应”交往模型，独立撰写完成4万字专著行业研究文稿。</p>
+                    </div>
+                    <div class="mac-pane hidden space-y-2">
+                        <span class="px-2 py-0.5 bg-orange-500/10 text-orange-500 font-bold text-[9px] rounded">城市外宣大局 / 国际传播</span>
+                        <h4 class="font-extrabold text-sm text-gray-900 dark:text-white">南宁国际传播一周年项目</h4>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>国际传播：</strong>基于长江日报国际项目一手采访素材，系统总结和实操提炼出“可触达—可沟通—可理解—可互鉴”全框架外宣对策。</p>
+                    </div>
+                    <div class="mac-pane hidden space-y-2">
+                        <span class="px-2 py-0.5 bg-teal-500/10 text-teal-500 font-bold text-[9px] rounded">国家级 & 校级多语种沟通</span>
+                        <h4 class="font-extrabold text-sm text-gray-900 dark:text-white">国际跨文化用户运营</h4>
+                        <p class="text-gray-600 dark:text-gray-100 font-medium leading-relaxed">• <strong>用户支持：</strong>多维度进行留学生线上教学与系统支持，优化答疑指南SOP，提升满意度，并作为学校唯一 representative 作韩语闭幕致辞。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="timeline-modal" class="fixed inset-0 z-[2500] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeTimelineModal()">
+        <div class="w-[520px] h-[520px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <button onclick="closeTimelineModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 dark:hover:text-white text-base transition-colors">
+                <i class="fa-solid fa-square-xmark"></i>
+            </button>
+            <div class="text-center pb-2 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center">
+                <span class="text-[10px] font-bold text-cyan-500 tracking-widest uppercase">CADRE LOG</span>
+                <h4 class="text-sm font-extrabold text-gray-900 dark:text-white mt-0.5">学生干部任职时间轴</h4>
+            </div>
+
+            <div class="flex-1 overflow-y-auto py-4 pl-4 relative space-y-6 mt-2 pr-1">
+                <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+                
+                <div class="relative flex gap-4 items-start">
+                    <div class="w-4 h-4 rounded-full bg-cyan-500 border-4 border-white dark:border-slate-900 z-10 mt-1 shadow-sm"></div>
+                    <div class="flex-1 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-gray-100 dark:border-gray-800/60">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-cyan-500 font-bold">2023 - 2024 | 武汉大学</span><span class="text-[9px] bg-cyan-500 text-white px-1.5 rounded font-extrabold">校级</span></div>
+                        <h5 class="text-xs font-bold text-gray-900 dark:text-white mt-1">校研究生会 — 综合事务部部长</h5>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-200 mt-1 leading-relaxed">统筹全校研究生会务保障、公文制度修订与多院系跨部门联动，完成50 + 份公文材料、7 所院系联动、落地十余场校级大型活动，获评2024武汉大学校级优秀学生干部。</p>
+                        <div class="flex flex-wrap gap-1 mt-1.5">
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">会务保障</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">公文迭代</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">活动策划</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">跨院协作</span>
+                            <span class="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold rounded">制度搭建</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative flex gap-4 items-start">
+                    <div class="w-4 h-4 rounded-full bg-blue-500 border-4 border-white dark:border-slate-900 z-10 mt-1 shadow-sm"></div>
+                    <div class="flex-1 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-gray-100 dark:border-gray-800/60">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-blue-500 font-bold">2023 - 2024 | 武大新传院</span><span class="text-[9px] bg-blue-500 text-white px-1.5 rounded font-extrabold">院级</span></div>
+                        <h5 class="text-xs font-bold text-gray-900 dark:text-white mt-1">新闻与传播学院研究生会 — 组织部部长</h5>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-200 mt-1 leading-relaxed">统筹学院思想引领、团员关系转接、志愿活动、评奖评优工作，承办学术研讨会会务，落地二十余场主题志愿活动。</p>
+                        <div class="flex flex-wrap gap-1 mt-1.5">
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">思想引领</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">团组织管理</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">志愿统筹</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">评奖评优</span>
+                            <span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold rounded">学术会务</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex gap-4 items-start">
+                    <div class="w-4 h-4 rounded-full bg-purple-500 border-4 border-white dark:border-slate-900 z-10 mt-1 shadow-sm"></div>
+                    <div class="flex-1 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-gray-100 dark:border-gray-800/60">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-purple-500 font-bold">2019 - 2023 | 四川师大</span><span class="text-[9px] bg-purple-500 text-white px-1.5 rounded font-extrabold">校级</span></div>
+                        <h5 class="text-xs font-bold text-gray-900 dark:text-white mt-1">校融媒体中心 — 编辑部部长</h5>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-200 mt-1 leading-relaxed">统筹校级新媒体采编团队，负责图文视听内容生产、专题策划与全媒体矩阵运营，完成200 + 新闻稿、50 万总阅读、10 + 专题特辑、50 场活动全媒体报道，产出多篇 10w + 爆款内容。</p>
+                        <div class="flex flex-wrap gap-1 mt-1.5">
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">新闻报道</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">采写编发</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">内容生产</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">专题策划</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">矩阵运营</span>
+                            <span class="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold rounded">视听创作</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-2 text-[10px] font-medium text-gray-400 italic">"在多维度的平台担当中，精进组织韧性与协作力。"</div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 w-72 p-5 rounded-2xl shadow-2xl relative text-center transform scale-95 transition-transform duration-300">
+            <button onclick="closeContactModal()" class="absolute top-3.5 right-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-white text-xs">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-32 h-32 mx-auto bg-gray-100 dark:bg-slate-800 rounded-xl flex flex-col items-center justify-center border border-dashed border-gray-300 dark:border-slate-700 p-2 mb-3">
+                <i class="fa-solid fa-qrcode text-3xl text-gray-300 mb-1"></i>
+                <img src="./assets/images/contact-qr.jpg" alt="WeChat QR Code" class="w-32 h-32 rounded-lg object-cover mb-3">
+                <span id="modal-qr-text" class="text-[9px] text-gray-400 dark:text-gray-300">微信二维码位置</span>
+            </div>
+            <div class="space-y-1.5 text-left text-[11px] text-gray-600 dark:text-gray-200 mb-3 bg-gray-50 dark:bg-slate-950 p-2.5 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-phone text-blue-500 w-3"></i>
+                    <span><span class="lang-tag-tel">电话：</span><strong>18011627093</strong></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-envelope text-blue-500 w-3"></i>
+                    <span><span class="lang-tag-email">邮箱：</span><strong>h1016184702@163.com</strong></span>
+                </div>
+            </div>
+            <p class="text-[11px] font-medium text-gray-400 italic">"I sincerely welcome you to contact me."</p>
+        </div>
+    </div>
+
+    <div id="orbit-detail-modal" class="fixed inset-0 z-[2000] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeOrbitModal()">
+        <div id="orbit-modal-body" class="w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <button onclick="closeOrbitModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 dark:hover:text-white text-sm transition-colors z-50">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-media-container" class="w-full flex-none aspect-[2/3] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative">
+                
+                <img id="modal-card-img" src="" alt="Zoomed Asset" class="w-full h-full object-cover absolute inset-0">
+                
+                <video id="modal-card-video" controls class="absolute inset-0 w-full h-full object-cover hidden"></video>
+
+                <div id="modal-carousel-container" class="absolute inset-0 hidden w-full h-full">
+                    <img id="carousel-img-0" src="./assets/images/visual_orbit_5_01.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-100">
+                    <img id="carousel-img-1" src="./assets/images/visual_orbit_5_02.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0">
+                    <img id="carousel-img-2" src="./assets/images/visual_orbit_5_03.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0">
+                    <img id="carousel-img-3" src="./assets/images/visual_orbit_5_04.jpg" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0">
+                </div>
+            </div>
+            <div class="text-center space-y-2 mt-auto">
+                <div class="text-[11px] font-bold tracking-widest text-[#f2c787] uppercase" id="modal-detail-tag">DESIGN CONCEPT</div>
+                <div id="modal-card-editor" class="w-full p-4 bg-gray-50 dark:bg-slate-950 flex flex-col items-center justify-center text-center border border-gray-200 dark:border-slate-800 rounded-xl overflow-y-auto transition-all"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="writing-gallery-modal" class="fixed inset-0 z-[3000] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeWritingModal()">
+        <div class="w-[90%] max-w-[800px] h-[85vh] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center p-4 border-b border-gray-100 dark:border-slate-800">
+                <h4 id="writing-modal-title" class="font-bold text-sm text-gray-900 dark:text-white tracking-wider"></h4>
+                <button onclick="closeWritingModal()" class="text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-black/20" id="writing-gallery-container">
+                </div>
+        </div>
+    </div>
+
+    <div id="video-player-modal" class="fixed inset-0 z-[2500] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeVideoPlayerModal()">
+        <div class="w-[90%] max-w-[720px] bg-slate-950 rounded-2xl overflow-hidden shadow-2xl relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <button onclick="closeVideoPlayerModal()" class="absolute top-4 right-4 text-white/70 hover:text-white text-lg z-50 bg-black/40 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="aspect-video w-full bg-black">
+                <video id="native-video-node" controls class="w-full h-full object-contain">
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
+            <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+                <h4 id="video-modal-title" class="font-bold text-xs tracking-wide">视频播放中</h4>
+                <span class="text-[10px] text-gray-400 bg-white/10 px-2 py-0.5 rounded">Cinema Mode</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'EN';
+        const contentData = {
+            ZH: {
+                intro: `<p>持续学习&nbsp;&nbsp;保持敏感&nbsp;&nbsp;保持判断力与连接力</p>
+                        <p>创作真正的温度来自人的观察&nbsp;&nbsp;绝非单一数字化的模仿</p>
+                        <p>衷心希望AI的创作依旧可以焕发<span class="text-blue-600 dark:text-blue-400 font-extrabold">“灵韵”</span></p>`,
+                keywords: ['数字叙事', '用户研究', '营销策划', '视觉设计'],
+                tel: '电话：',
+                email: '邮箱：',
+                qr: '微信二维码位置',
+                worksPageTag: 'PAGE 02',
+                worksMainTitle: 'WORK',
+                worksDescTitle: 'AI Vibecoding ——从概念到落地、从视觉到叙事',
+                tabVisual: '01 视觉设计',
+                tabGame: '02 游戏设计',
+                tabVideo: '03 视频制作',
+                tabWriting: '04 文字创作',
+                folder1: '新闻采访与公文写作',
+                folder2: '论文及专业文本创作',
+                folderSub: '点击图片可跳转相关链接',
+                designThoughts: [
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#8ba892] shadow-sm text-[13px] tracking-wider">茉莉奶白「花香鲜茶 & 花香冰茶」系列</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">整体选用<span class="text-[#8ba892] font-extrabold">低饱和柔雾浅绿</span>作为核心色调<br>复刻春日茉莉茶园温润柔和的松弛底色<br>提取<span class="text-[#8ba892] font-extrabold">盖碗瓷盏、茉莉花枝、茶烟、风铃</span>等国风元素</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#859bb3] shadow-sm text-[13px] tracking-wider">茉莉奶白水墨国风视觉海报</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">以<span class="text-[#859bb3] font-extrabold">雾感浅冰蓝</span>为主色调，花香入水 自在山间<br>结合<span class="text-[#859bb3] font-extrabold">水墨山水、玉兰花枝、飞鸟古亭</span>等意象<br>呈现山间饮茶空灵诗意</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c5a47e] shadow-sm text-[13px] tracking-wider">日用好物主题视觉 KV 设计</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">主题概念：<span class="text-[#c5a47e] font-extrabold">Bloom Your Everyday</span><br>以清透雾感冰蓝为基底，搭配<span class="text-[#c5a47e] font-extrabold">奶白、浅鎏金</span>提亮<br>将细碎美好事物视觉化，诠释平凡日常的浪漫魔法</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#729490] shadow-sm text-[13px] tracking-wider">luckin coffee | 青苹果茉莉冰茶</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full"><span class="text-[#729490] font-extrabold">宫崎骏限定新品海报</span><br>结合夏日林间光影、<span class="text-[#729490] font-extrabold">青苹果鲜果与龙猫 IP</span> 元素<br>营造治愈清爽的夏日童话饮茶氛围</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b57a66] shadow-sm text-[13px] tracking-wider">《四时》国风生活场景插画系列</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">以<span class="text-[#b57a66] font-extrabold">四季专属自然色调</span>区分四幅画面<br>融合冬雪庭院、盛夏密林、秋枫山谷、灯火古镇<br>搭配古风人物绘出悠然闲适的<span class="text-[#b57a66] font-extrabold">中式烟火意境</span></div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">luckin coffee | 鲜橙西瓜冰椰奶茶</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full"><span class="text-[#7a919e] font-extrabold">酷儿限定新品海报</span><br>采用通透日光写实画风<br>还原海边果茶<span class="text-[#7a919e] font-extrabold">清爽治愈的度假意境</span></div>`
+                ],
+                gameThoughts: [
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#948b9d] shadow-sm text-[13px] tracking-wider">魔幻科幻双风格融合设定</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">打破传统魔幻、纯科幻的单一世界观<br>设定文明掌握<span class="text-[#948b9d] font-extrabold">“能量魔导科技”</span>，以尖顶城堡为根基<br><span class="text-[#948b9d] font-extrabold">蓝光机械、浮空飞碟、全息法阵</span>统一于冰蓝色光效<br>塑造独特的“魔导星际文明”</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#6a7f93] shadow-sm text-[13px] tracking-wider">深海海底 × 赛博朋克 融合</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">巨型水下都市作为 UI 交互原生场景<br><span class="text-[#6a7f93] font-extrabold">全息霓虹界面</span>直接嵌入建筑墙体与观景平台<br>通过<span class="text-[#6a7f93] font-extrabold">场景垂直分层</span>精准划分功能交互区</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#809882] shadow-sm text-[13px] tracking-wider">水墨国风原生生态设定</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">借鉴<span class="text-[#809882] font-extrabold">传统水墨山水</span>美学<br>云海、奇峰、溪流构成可自主演化的原生环境<br>主打纯自由生态模拟、无强制主线的<span class="text-[#809882] font-extrabold">开放式玩法</span></div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#748c8b] shadow-sm text-[13px] tracking-wider">上下分层双核心开放地图</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">以<span class="text-[#748c8b] font-extrabold">欧式田园低饱和度绿野</span>为底层基调<br>视觉中心搭配<span class="text-[#748c8b] font-extrabold">高空浮空科幻塔</span><br>形成空间感极强的双核心探索区域</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c29a73] shadow-sm text-[13px] tracking-wider">东方神话天庭枢纽场景</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">鎏金层叠仙殿悬浮云海，<span class="text-[#c29a73] font-extrabold">中心圣光法阵</span>为交互枢纽<br>玉柱祥云廊道清晰分割<span class="text-[#c29a73] font-extrabold">交易、宗门、副本、传送</span>四大区<br>集中承载多人社交与高阶任务入口</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">独立小型支线休闲秘境</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">大幅弱化战斗，主打<span class="text-[#b48888] font-extrabold">植物收集、水系解谜、隐士奇遇</span><br>荷塘、古亭构建低压休闲场景<br><span class="text-[#b48888] font-extrabold">高饱和翠绿自然色调</span>舒缓视觉，配套独立生态</div>`
+                ]
+            },
+            EN: {
+                intro: `<p>Stay Curious & Sensitive &nbsp;&nbsp; Maintain Judgment & Connection</p>
+                        <p>The authentic warmth of creation stems from human observation, never singular digital mimicry.</p>
+                        <p>I sincerely hope that AI creations can still shine with a unique <span class="text-blue-600 dark:text-blue-400 font-extrabold">"Aura"</span></p>`,
+                keywords: ['Digital Narrative', 'User Research', 'Marketing Planning', 'Visual Design'],
+                tel: 'TEL: ',
+                email: 'Email: ',
+                qr: 'WeChat QR Code Position',
+                worksPageTag: 'PAGE 02',
+                worksMainTitle: 'WORK',
+                worksDescTitle: 'AI Vibecoding — From concept to reality, from visual to narrative.',
+                tabVisual: '01 visual design',
+                tabGame: '02 game design',
+                tabVideo: '03 video production',
+                tabWriting: '04 text creation',
+                folder1: 'News & Official Documents',
+                folder2: 'Thesis & Professional Texts',
+                folderSub: 'Click image to jump to related link',
+                designThoughts: [
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#8ba892] shadow-sm text-[13px] tracking-wider">Concept Image 01</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Exploring visual narrative layout through <br><span class="text-[#8ba892] font-extrabold">granular digital block maps</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#859bb3] shadow-sm text-[13px] tracking-wider">Concept Image 02</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Deconstructing fluid user flow patterns with <br><span class="text-[#859bb3] font-extrabold">experimental raw shapes</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c5a47e] shadow-sm text-[13px] tracking-wider">Concept Image 03</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Injecting <span class="text-[#c5a47e] font-extrabold">micro-structural typography rules</span><br>into modern display frames.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#729490] shadow-sm text-[13px] tracking-wider">Concept Image 04</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Assessing focal point transfers via <br><span class="text-[#729490] font-extrabold">dynamic low-contrast gray scales</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b57a66] shadow-sm text-[13px] tracking-wider">Concept Image 05</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Balancing <span class="text-[#b57a66] font-extrabold">analogue film grain texture</span><br>with seamless automated interfaces.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">Concept Image 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing micro-interaction loops from <br><span class="text-[#7a919e] font-extrabold">macroscopic structural standpoints</span>.</div>`
+                ],
+                gameThoughts: [
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#948b9d] shadow-sm text-[13px] tracking-wider">Game Spec 01</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Optimizing narrative arc and progression paths using<br><span class="text-[#948b9d] font-extrabold">multi-stage core beat structures</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#6a7f93] shadow-sm text-[13px] tracking-wider">Game Spec 02</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Building cyber-themed interfaces based on<br><span class="text-[#6a7f93] font-extrabold">sleek luminescent glowing telemetry maps</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#809882] shadow-sm text-[13px] tracking-wider">Game Spec 03</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Crafting autonomous AI state machines for sprawling<br><span class="text-[#809882] font-extrabold">dynamic sandbox ecologies</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#748c8b] shadow-sm text-[13px] tracking-wider">Game Spec 04</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Projecting eldritch atmosphere metrics via<br><span class="text-[#748c8b] font-extrabold">abstract non-Euclidean linear designs</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c29a73] shadow-sm text-[13px] tracking-wider">Game Spec 05</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Modeling open-economy balance thresholds via<br><span class="text-[#c29a73] font-extrabold">state-driven regression vectors</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">Game Spec 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing gray-box fast prototype playtest heats to ensure<br><span class="text-[#b48888] font-extrabold">instantaneous fun loops</span>.</div>`
+                ]
+            }
+        };
+
+        const images = [
+            "./assets/images/visual_orbit_1.jpg",
+            "./assets/images/visual_orbit_2.jpg",
+            "./assets/images/visual_orbit_3.jpg",
+            "./assets/images/visual_orbit_4.jpg",
+            "./assets/images/visual_orbit_5.jpg",
+            "./assets/images/visual_orbit_6.jpg"
+        ];
+
+        const gameImages = [
+            "./assets/images/game_project_1.jpg",
+            "./assets/images/game_project_2.jpg",
+            "./assets/images/game_project_3.jpg",
+            "./assets/images/game_project_4.jpg",
+            "./assets/images/game_project_5.jpg",
+            "./assets/images/game_project_6.jpg"
+        ];
+        
+        const writingData = {
+            1: {
+                images: [
+                    { src: "./assets/images/work_writing_1.jpg", link: "" },
+                    { src: "./assets/images/work_writing_2.jpg", link: "" },
+                    { src: "./assets/images/work_writing_3.jpg", link: "" },
+                    { src: "./assets/images/work_writing_4.jpg", link: "https://mp.weixin.qq.com/s/ZrsNFdZEFk1bxC23vnATvg" },
+                    { src: "./assets/images/work_writing_5.jpg", link: "https://mp.weixin.qq.com/s/hc2pV1s6lJy_bGNNP1KhHg" },
+                    { src: "./assets/images/work_writing_6.jpg", link: "" }
+                ]
+            },
+            2: {
+                images: [
+                    { src: "./assets/images/work_writing_7.jpg", link: "https://kns.cnki.net/kcms2/article/abstract?v=yAka2kXFwSRhYx_1s53mU1b4ivjE9BN5QytO-ZdVysWEYELRBgqXiDgQ3AYZvh-3vXohQE21winjqVi9xkH8hqAxhCxOcJyDMWx4w_xI55jnFJ8lNq5odQpEX2uxvw21JwMC3gXtFCwcIFvWTEMrcTNb5mU1HR4IqdndXsAoGqU&uniplatform=NZKPT&captchaId=ae96880e-8c38-4880-8ae5-a2266f782c6a" },
+                    { src: "./assets/images/work_writing_8.jpg", link: "https://mp.weixin.qq.com/s/px-JW6gZ3siD2bF0E761zQ?click_id=50" },
+                    { src: "./assets/images/work_writing_9.jpg", link: "https://mp.weixin.qq.com/s/ABAXNWJPJjCGXX__1PSDCw" }
+                ]
+            }
+        };
+
+        let orbitPercentProgress = 0; 
+        let isOrbitPaused = false;
+        let activeImageIndex = null;
+        let activeSourceType = 'visual'; 
+        
+        let carouselInterval;
+        let currentCarouselIndex = 0;
+        const totalCarouselImages = 4;
+
+        function startOrbitCarousel() {
+            currentCarouselIndex = 0;
+            updateCarouselVisibility();
+            carouselInterval = setInterval(() => {
+                currentCarouselIndex = (currentCarouselIndex + 1) % totalCarouselImages;
+                updateCarouselVisibility();
+            }, 1200); 
+        }
+
+        function stopOrbitCarousel() {
+            if (carouselInterval) clearInterval(carouselInterval);
+        }
+
+        function updateCarouselVisibility() {
+            for (let i = 0; i < totalCarouselImages; i++) {
+                const img = document.getElementById(`carousel-img-${i}`);
+                if (!img) continue;
+                if (i === currentCarouselIndex) {
+                    img.classList.remove('opacity-0');
+                    img.classList.add('opacity-100');
+                } else {
+                    img.classList.remove('opacity-100');
+                    img.classList.add('opacity-0');
+                }
+            }
+        }
+
+        function initOrbitImagesDom() {
+            const slot = document.getElementById('orbit-items-dynamic-slot');
+            slot.innerHTML = ''; 
+            images.forEach((src, idx) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'orbit-item';
+                itemDiv.id = `orbit-item-node-${idx}`;
+                itemDiv.style.width = '80px';
+                itemDiv.style.height = '80px';
+                itemDiv.innerHTML = `<img src="${src}" alt="Orbit Graphic" class="orbit-image" draggable="false">`;
+                itemDiv.onclick = () => openOrbitModal(idx);
+                slot.appendChild(itemDiv);
+            });
+            syncOrbitTrackBounds();
+        }
+
+        function syncOrbitTrackBounds() {
+            const container = document.getElementById('orbit-images-container');
+            const ellipse = document.getElementById('dynamic-orbit-ellipse');
+            if (!container || !ellipse) return null;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            const scaleFactor = w / 1400;
+            const rx = 340 * scaleFactor;
+            const ry = 80 * scaleFactor;
+            ellipse.setAttribute('cx', w / 2);
+            ellipse.setAttribute('cy', h / 2);
+            ellipse.setAttribute('rx', rx);
+            ellipse.setAttribute('ry', ry);
+            ellipse.style.transform = `rotate(-8deg)`;
+            ellipse.style.transformOrigin = `${w/2}px ${h/2}px`;
+            return { cx: w / 2, cy: h / 2, rx, ry };
+        }
+
+        function renderOrbitTick() {
+            if (!isOrbitPaused) {
+                orbitPercentProgress += (100 / (30 * 60)); 
+                if (orbitPercentProgress >= 100) orbitPercentProgress = 0;
+            }
+            const bounds = syncOrbitTrackBounds();
+            if (bounds) {
+                const { cx, cy, rx, ry } = bounds;
+                const rotationRad = -8 * Math.PI / 180;
+                images.forEach((_, idx) => {
+                    const item = document.getElementById(`orbit-item-node-${idx}`);
+                    if (!item) return;
+                    const itemOffset = (idx / images.length) * 100;
+                    const currentItemPercent = (orbitPercentProgress + itemOffset) % 100;
+                    const rad = (currentItemPercent / 100) * Math.PI * 2;
+                    const localX = rx * Math.cos(rad);
+                    const localY = ry * Math.sin(rad);
+                    const rotatedX = localX * Math.cos(rotationRad) - localY * Math.sin(rotationRad);
+                    const rotatedY = localX * Math.sin(rotationRad) + localY * Math.cos(rotationRad);
+                    const finalX = cx + rotatedX - 40;
+                    const finalY = cy + rotatedY - 40;
+                    const zIndex = Math.round(Math.sin(rad) * 100) + 200;
+                    const depthScale = 0.8 + (Math.sin(rad) + 1) * 0.2; 
+                    const depthOpacity = 0.5 + (Math.sin(rad) + 1) * 0.25;
+                    item.style.transform = `translate(${finalX}px, ${finalY}px) scale(${depthScale})`;
+                    item.style.zIndex = zIndex;
+                    item.style.opacity = depthOpacity;
+                });
+            }
+            requestAnimationFrame(renderOrbitTick);
+        }
+
+        function openOrbitModal(index) {
+            activeSourceType = 'visual';
+            activeImageIndex = index;
+            isOrbitPaused = true; 
+            const modal = document.getElementById('orbit-detail-modal');
+            const modalBody = document.getElementById('orbit-modal-body');
+            const mediaContainer = document.getElementById('modal-media-container');
+            const img = document.getElementById('modal-card-img');
+            const video = document.getElementById('modal-card-video');
+            const carousel = document.getElementById('modal-carousel-container');
+            const editor = document.getElementById('modal-card-editor');
+            
+            if (index === 2) {
+                modalBody.className = "w-[480px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[3/2] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+            } else {
+                modalBody.className = "w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[2/3] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+            }
+            
+            document.getElementById('modal-detail-tag').innerText = "VISUAL INTELLECT";
+            editor.innerHTML = contentData[currentLanguage].designThoughts[index];
+
+            video.classList.add('hidden');
+            video.pause();
+
+            if (index === 4) {
+                img.classList.add('hidden');
+                carousel.classList.remove('hidden');
+                startOrbitCarousel();
+            } else {
+                stopOrbitCarousel();
+                carousel.classList.add('hidden');
+                img.classList.remove('hidden');
+                img.src = images[index]; 
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalBody.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function openGameMediaModal(index) {
+            activeSourceType = 'game';
+            activeImageIndex = index;
+            const modal = document.getElementById('orbit-detail-modal');
+            const modalBody = document.getElementById('orbit-modal-body');
+            const mediaContainer = document.getElementById('modal-media-container');
+            const img = document.getElementById('modal-card-img');
+            const video = document.getElementById('modal-card-video');
+            const carousel = document.getElementById('modal-carousel-container');
+            const editor = document.getElementById('modal-card-editor');
+            
+            modalBody.className = "w-[480px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+            mediaContainer.className = "w-full flex-none aspect-[3/2] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+
+            document.getElementById('modal-detail-tag').innerText = "GAME MECHANIC FRAMEWORK";
+            editor.innerHTML = contentData[currentLanguage].gameThoughts[index];
+
+            stopOrbitCarousel();
+            carousel.classList.add('hidden');
+
+            if (index === 0 || index === 1 || index === 3) {
+                img.classList.add('hidden');
+                video.classList.remove('hidden');
+                if (index === 0) {
+                    video.poster = "./assets/images/game_project_1.jpg";
+                    video.src = "./assets/videos/game_video_1.mp4";
+                } else if (index === 1) {
+                    video.poster = "./assets/images/game_project_2.jpg";
+                    video.src = "./assets/videos/game_video_2.mp4";
+                } else if (index === 3) {
+                    video.poster = "./assets/images/game_project_4.jpg";
+                    video.src = "./assets/videos/game_video_4.mp4";
+                }
+            } else {
+                video.classList.add('hidden');
+                video.pause();
+                img.classList.remove('hidden');
+                if (index === 2) img.src = "./assets/images/game_project_3.jpg";
+                if (index === 4) img.src = "./assets/images/game_project_5.jpg";
+                if (index === 5) img.src = "./assets/images/game_project_6.jpg";
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalBody.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeOrbitModal() {
+            isOrbitPaused = false;
+            activeImageIndex = null;
+            const modal = document.getElementById('orbit-detail-modal');
+            const modalBody = document.getElementById('orbit-modal-body');
+            const video = document.getElementById('modal-card-video');
+            
+            stopOrbitCarousel();
+            video.pause();
+
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalBody.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function openWritingModal(folderId) {
+            const m = document.getElementById('writing-gallery-modal');
+            const container = document.getElementById('writing-gallery-container');
+            const title = document.getElementById('writing-modal-title');
+
+            title.innerText = contentData[currentLanguage][folderId === 1 ? 'folder1' : 'folder2'];
+            container.innerHTML = '';
+            
+            writingData[folderId].images.forEach(item => {
+                const imgTag = `<img src="${item.src}" class="w-full rounded-lg shadow-sm border border-gray-200/50 dark:border-gray-700/50 mb-4 transition-transform hover:scale-[1.01]" loading="lazy">`;
+                if(item.link) {
+                    container.innerHTML += `<a href="${item.link}" target="_blank" class="block cursor-pointer" title="点击跳转查看">${imgTag}</a>`;
+                } else {
+                    container.innerHTML += imgTag;
+                }
+            });
+
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                m.classList.remove('opacity-0', 'pointer-events-none');
+                m.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeWritingModal() {
+            const m = document.getElementById('writing-gallery-modal');
+            m.classList.add('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                m.classList.add('hidden');
+                document.getElementById('writing-gallery-container').innerHTML = ''; 
+            }, 300);
+        }
+
+        function openVideoPlayerModal(src, title) {
+            const modal = document.getElementById('video-player-modal');
+            const video = document.getElementById('native-video-node');
+            document.getElementById('video-modal-title').innerText = title;
+            video.src = src;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('div').classList.remove('scale-95');
+                video.play();
+            }, 10);
+        }
+
+        function closeVideoPlayerModal() {
+            const modal = document.getElementById('video-player-modal');
+            const video = document.getElementById('native-video-node');
+            video.pause();
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function openIphoneModal() {
+            const m = document.getElementById('iphone-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                m.classList.remove('opacity-0', 'pointer-events-none');
+                m.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+        function closeIphoneModal() {
+            const m = document.getElementById('iphone-modal');
+            m.classList.add('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+
+        function openMacTabsModal(tabIndex = 0) {
+            const m = document.getElementById('mactabs-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                m.classList.remove('opacity-0', 'pointer-events-none');
+                m.querySelector('div').classList.remove('scale-95');
+                switchMacTab(tabIndex);
+            }, 10);
+        }
+        function closeMacTabsModal() {
+            const m = document.getElementById('mactabs-modal');
+            m.classList.add('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+        function switchMacTab(index) {
+            const btns = document.querySelectorAll('.mac-tab-btn');
+            const panes = document.querySelectorAll('.mac-pane');
+            btns.forEach((btn, idx) => {
+                if(idx === index) {
+                    btn.className = "mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all bg-purple-500 text-white";
+                    panes[idx].classList.remove('hidden');
+                    panes[idx].classList.add('block');
+                } else {
+                    btn.className = "mac-tab-btn text-left p-2 rounded-lg text-[11px] font-bold transition-all text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800";
+                    panes[idx].classList.add('hidden');
+                    panes[idx].classList.remove('block');
+                }
+            });
+        }
+
+        function openTimelineModal() {
+            const m = document.getElementById('timeline-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                m.classList.remove('opacity-0', 'pointer-events-none');
+                m.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+        function closeTimelineModal() {
+            const m = document.getElementById('timeline-modal');
+            m.classList.add('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ZH' ? 'EN' : 'ZH';
+            
+            document.getElementById('intro-paragraph').innerHTML = contentData[currentLanguage].intro;
+            document.querySelector('.lang-tag-tel').innerText = contentData[currentLanguage].tel;
+            document.querySelector('.lang-tag-email').innerText = contentData[currentLanguage].email;
+            document.getElementById('modal-qr-text').innerText = contentData[currentLanguage].qr;
+            
+            const keywordsBox = document.getElementById('keywords-box');
+            keywordsBox.innerHTML = '';
+            contentData[currentLanguage].keywords.forEach(word => {
+                keywordsBox.innerHTML += `<span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/40 text-slate-600 dark:text-slate-300 text-[11px] font-medium tracking-wide">${word}</span>`;
+            });
+
+            document.getElementById('works-page-tag').innerText = contentData[currentLanguage].worksPageTag;
+            document.getElementById('works-main-title').innerText = contentData[currentLanguage].worksMainTitle;
+            document.getElementById('works-desc-title').innerText = contentData[currentLanguage].worksDescTitle;
+            
+            document.getElementById('tab-visual').innerText = contentData[currentLanguage].tabVisual;
+            document.getElementById('tab-game').innerText = contentData[currentLanguage].tabGame;
+            document.getElementById('tab-video').innerText = contentData[currentLanguage].tabVideo;
+            document.getElementById('tab-writing').innerText = contentData[currentLanguage].tabWriting;
+            
+            document.getElementById('folder-title-1').innerText = contentData[currentLanguage].folder1;
+            document.getElementById('folder-title-2').innerText = contentData[currentLanguage].folder2;
+            document.getElementById('folder-sub-1').innerText = contentData[currentLanguage].folderSub;
+            document.getElementById('folder-sub-2').innerText = contentData[currentLanguage].folderSub;
+        }
+
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        function scrollToSection(id, button) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('nav-item-active'));
+            button.classList.add('nav-item-active');
+            const target = document.getElementById(id);
+            if(target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function switchWorkTab(type) {
+            const btnVisual = document.getElementById('tab-visual');
+            const btnGame = document.getElementById('tab-game');
+            const btnVideo = document.getElementById('tab-video');
+            const btnWriting = document.getElementById('tab-writing');
+            
+            const panelVisual = document.getElementById('panel-visual');
+            const panelGame = document.getElementById('panel-game');
+            const panelVideo = document.getElementById('panel-video');
+            const panelWriting = document.getElementById('panel-writing');
+
+            [btnVisual, btnGame, btnVideo, btnWriting].forEach(b => {
+                b.classList.remove('border-[#ba5700]', 'text-[#ba5700]', 'border-[#5dadf5]', 'text-[#5dadf5]');
+                b.classList.add('border-transparent', 'text-gray-400');
+            });
+
+            panelVisual.classList.add('hidden');
+            panelGame.classList.add('hidden');
+            panelVideo.classList.add('hidden');
+            panelWriting.classList.add('hidden');
+
+            if (type === 'visual') {
+                btnVisual.classList.add('border-[#ba5700]', 'text-[#ba5700]');
+                btnVisual.classList.remove('border-transparent', 'text-gray-400');
+                panelVisual.classList.remove('hidden');
+            } else if (type === 'game') {
+                btnGame.classList.add('border-[#ba5700]', 'text-[#ba5700]');
+                btnGame.classList.remove('border-transparent', 'text-gray-400');
+                panelGame.classList.remove('hidden');
+            } else if (type === 'video') {
+                btnVideo.classList.add('border-[#ba5700]', 'text-[#ba5700]');
+                btnVideo.classList.remove('border-transparent', 'text-gray-400');
+                panelVideo.classList.remove('hidden');
+            } else if (type === 'writing') {
+                btnWriting.classList.add('border-[#ba5700]', 'text-[#ba5700]');
+                btnWriting.classList.remove('border-transparent', 'text-gray-400');
+                panelWriting.classList.remove('hidden');
+            }
+        }
+
+        const modal = document.getElementById('contact-modal');
+        const modalBody = modal.querySelector('div');
+        function openContactModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalBody.classList.remove('scale-95');
+            }, 10);
+        }
+        function closeContactModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalBody.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        const textLine1 = "Hi, I'm Huang Jinghan.";
+        const textLine2 = "Creative Designer & AI Native.";
+        const elLine1 = document.getElementById('line1');
+        const elLine2 = document.getElementById('line2');
+        let idx1 = 0, idx2 = 0;
+
+        function typeLine1() {
+            elLine1.classList.add('typewriter-cursor', 'typing-active');
+            if (idx1 < textLine1.length) {
+                elLine1.innerHTML += textLine1.charAt(idx1);
+                idx1++;
+                setTimeout(typeLine1, 60);
+            } else {
+                elLine1.classList.remove('typewriter-cursor', 'typing-active');
+                elLine1.classList.add('typing-finished');
+                setTimeout(typeLine2, 200);
+            }
+        }
+
+        function typeLine2() {
+            elLine2.classList.add('typewriter-cursor', 'typing-active');
+            if (idx2 < textLine2.length) {
+                elLine2.innerHTML += textLine2.charAt(idx2);
+                idx2++;
+                setTimeout(typeLine2, 60);
+            } else {
+                elLine2.classList.remove('typing-active');
+                elLine2.classList.add('typing-finished');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            toggleLanguage(); 
+            initOrbitImagesDom(); 
+            renderOrbitTick(); 
+            setTimeout(typeLine1, 800); 
+        });
+
+        window.addEventListener('resize', syncOrbitTrackBounds);
+
+        const cursor = document.getElementById('magic-cursor');
+        const trail = document.getElementById('cursor-trail');
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let trailingX = mouseX, trailingY = mouseY;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        function animateTrailLoop() {
+            trailingX += (mouseX - trailingX) * 0.25;
+            trailingY += (mouseY - trailingY) * 0.25;
+            trail.style.left = trailingX + 'px';
+            trail.style.top = trailingY + 'px';
+            requestAnimationFrame(animateTrailLoop);
+        }
+        animateTrailLoop();
+
+        document.body.addEventListener('mouseenter', (e) => {
+            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-card-node, .video-card-node, .folder-wrapper')) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursor.style.background = 'rgba(39, 97, 255, 0.05)';
+            }
+        }, true);
+        document.body.addEventListener('mouseleave', (e) => {
+            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-card-node, .video-card-node, .folder-wrapper')) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.background = 'rgba(39, 97, 255, 0.25)';
+            }
+        }, true);
+
+        const sparkCanvas = document.getElementById('click-spark-canvas');
+        const sparkCtx = sparkCanvas.getContext('2d');
+        let sparks = [];
+
+        function resizeSparkCanvas() {
+            sparkCanvas.width = window.innerWidth;
+            sparkCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeSparkCanvas);
+        resizeSparkCanvas();
+
+        const sparkConfig = {
+            sparkColor: '#2761FF', 
+            sparkSize: 8,         
+            sparkRadius: 15,       
+            sparkCount: 8,         
+            duration: 400          
+        };
+
+        class FireworkSpark {
+            constructor(x, y, index) {
+                this.x = x;
+                this.y = y;
+                this.size = (Math.random() * 0.3 + 0.7) * sparkConfig.sparkSize;
+                this.age = 0;
+                this.maxFrames = (sparkConfig.duration / 1000) * 60;
+                const angle = (index / sparkConfig.sparkCount) * Math.PI * 2;
+                const speed = (sparkConfig.sparkRadius / this.maxFrames) * 3.2; 
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.94;
+                this.vy *= 0.94;
+                this.vy += 0.02; 
+                this.age++;
+            }
+            draw() {
+                const progress = this.age / this.maxFrames;
+                const alpha = 1 - progress;
+                sparkCtx.fillStyle = sparkConfig.sparkColor;
+                sparkCtx.globalAlpha = alpha;
+                const currentSize = this.size * (1 - progress * 0.6);
+                sparkCtx.fillRect(this.x - currentSize/2, this.y - currentSize/2, currentSize, currentSize);
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('#contact-modal div') || e.target.closest('#orbit-detail-modal div') || e.target.closest('#iphone-modal div') || e.target.closest('#mactabs-modal div') || e.target.closest('#timeline-modal div') || e.target.closest('#video-player-modal div') || e.target.closest('#writing-gallery-modal div')) return; 
+            for (let i = 0; i < sparkConfig.sparkCount; i++) {
+                sparks.push(new FireworkSpark(e.clientX, e.clientY, i));
+            }
+        });
+
+        function renderSparksLoop() {
+            sparkCtx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                const sp = sparks[i];
+                sp.update();
+                sp.draw();
+                if (sp.age >= sp.maxFrames) sparks.splice(i, 1);
+            }
+            sparkCtx.globalAlpha = 1.0;
+            requestAnimationFrame(renderSparksLoop);
+        }
+        renderSparksLoop();
+
+        const canvas = document.getElementById('pixel-blast-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const params = {
+            pixelSize: 4,
+            color: '#5dadf5',
+            speed: 0.5,
+            edgeFade: 0.25,
+            rippleSpeed: 0.3,
+            rippleThickness: 0.1
+        };
+
+        let ripples = [];
+        let globalTime = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.75) {
+                ripples.push({ x: e.clientX, y: e.clientY, radius: 0, maxRadius: 150, opacity: 1 });
+            }
+        });
+
+        function drawPixelBlastEngine() {
+            ctx.clearRect(0, 0, width, height);
+            globalTime += params.speed * 0.02;
+            const size = params.pixelSize;
+            const step = size * 2; 
+
+            for (let x = 0; x < width; x += step) {
+                for (let y = 0; y < height; y += step) {
+                    let noise = Math.sin(x * 0.005 + globalTime) * Math.cos(y * 0.005) +
+                                Math.cos(x * 0.002 - globalTime) * Math.sin(y * 0.003) +
+                                Math.sin((x + y) * 0.004);
+                    let densityThreshold = 0.12; 
+                    if (noise > densityThreshold) {
+                        let alpha = (noise - densityThreshold) * 0.7;
+                        let fadeX = Math.min(x, width - x) / (width * params.edgeFade);
+                        let fadeY = Math.min(y, height - y) / (height * params.edgeFade);
+                        let edgeModifier = Math.min(1, Math.max(0, Math.min(fadeX, fadeY)));
+                        alpha *= edgeModifier;
+
+                        ripples.forEach(rp => {
+                            let dist = Math.hypot(x - rp.x, y - rp.y);
+                            let waveWidth = rp.maxRadius * params.rippleThickness;
+                            if (dist > rp.radius - waveWidth && dist < rp.radius + waveWidth) {
+                                alpha += (1 - Math.abs(dist - rp.radius) / waveWidth) * rp.opacity * 0.6;
+                            }
+                        });
+
+                        if (alpha > 0.02) {
+                            ctx.fillStyle = params.color;
+                            ctx.globalAlpha = Math.min(0.85, alpha);
+                            ctx.fillRect(x, y, size, size);
+                        }
+                    }
+                }
+            }
+            ctx.globalAlpha = 1.0;
+            ripples.forEach((rp, i) => {
+                rp.radius += (rp.maxRadius * params.rippleSpeed * 0.05);
+                rp.opacity = 1 - (rp.radius / rp.maxRadius);
+                if (rp.radius >= rp.maxRadius) ripples.splice(i, 1);
+            });
+            requestAnimationFrame(drawPixelBlastEngine);
+        }
+        drawPixelBlastEngine();
+    </script>
+</body>
+</html>
