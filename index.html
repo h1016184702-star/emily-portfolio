@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=LXGW+WenKai&family=PingFang+SC&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
@@ -53,11 +54,19 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(242, 199, 135, 0.6);
         }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
         .en-font { font-family: 'Parisienne', cursive; }
         .wenkai-font { font-family: 'LXGW WenKai', 'PingFang SC', serif; letter-spacing: 0.04em; }
 
-        body, a, button, [onclick], .orbit-item, textarea, .about-card, .game-card-node, .video-card-node, .folder-wrapper {
+        body, a, button, [onclick], .orbit-item, textarea, .about-card, .game-swap-card, .video-card-node, .folder-wrapper, .content__img {
             cursor: none !important;
         }
 
@@ -154,6 +163,91 @@
 
         .perspective-1000 { perspective: 1000px; }
         
+        /* ImageTrail CSS */
+        .content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 100;
+            border-radius: 8px;
+            background: transparent;
+            overflow: visible;
+            touch-action: pan-y;
+        }
+        .content__img {
+            width: 190px;
+            aspect-ratio: 1.1;
+            border-radius: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            overflow: hidden;
+            will-change: transform, filter, opacity;
+        }
+        .content__img-inner {
+            background-position: 50% 50%;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            background-size: cover;
+            position: absolute;
+            top: calc(-1 * 20px / 2);
+            left: calc(-1 * 20px / 2);
+            will-change: transform;
+        }
+
+        /* CardSwap CSS */
+        .card-swap-container {
+            position: relative;
+            perspective: 900px;
+            overflow: visible;
+            width: 320px;
+            height: 420px;
+            transform: translateY(-20px); 
+        }
+        .game-swap-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            background: #000;
+            transform-style: preserve-3d;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .game-swap-card:hover {
+            box-shadow: 0 10px 40px -10px rgba(242, 199, 135, 0.5);
+            border-color: var(--primary) !important;
+        }
+        @media (max-width: 768px) {
+            .card-swap-container { width: 280px; height: 380px; }
+        }
+        @media (max-width: 480px) {
+            .card-swap-container { width: 240px; height: 340px; }
+        }
+
+        /* About Me Card Effect CSS - Adjusted for better spacing */
+        .semi-circle-stage {
+            position: relative;
+            width: 100%;
+            height: 500px; 
+            margin-top: 5rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .about-card {
+            position: absolute !important;
+            width: 150px;
+            height: 220px;
+            transform-origin: center 700px; 
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0.2s;
+            will-change: transform;
+        }
         .about-card-inner {
             position: relative;
             width: 100%;
@@ -172,75 +266,31 @@
         }
         .about-card-back { transform: rotateY(180deg); }
 
-        .orbit-container {
-            position: relative;
-            width: 100%;
-            height: 480px;
-            margin-left: auto;
-            margin-right: auto;
-            overflow: visible;
-        }
-        .orbit-scaling-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-        .orbit-path-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .orbit-item {
-            position: absolute !important;
-            top: 0;
-            left: 0;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            border: 2px solid rgba(255,255,255,0.25);
-            will-change: transform, z-index;
-            user-select: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .orbit-item:hover {
-            box-shadow: 0 0 20px var(--primary);
-            border-color: var(--primary);
-        }
-        .orbit-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .about-card:nth-child(1) { transform: rotate(-54deg) translateY(0); z-index: 10; }
+        .about-card:nth-child(2) { transform: rotate(-42deg) translateY(0); z-index: 11; }
+        .about-card:nth-child(3) { transform: rotate(-30deg) translateY(0); z-index: 12; }
+        .about-card:nth-child(4) { transform: rotate(-18deg) translateY(0); z-index: 13; }
+        .about-card:nth-child(5) { transform: rotate(-6deg) translateY(0); z-index: 14; }
+        .about-card:nth-child(6) { transform: rotate(6deg) translateY(0); z-index: 15; }
+        .about-card:nth-child(7) { transform: rotate(18deg) translateY(0); z-index: 16; }
+        .about-card:nth-child(8) { transform: rotate(30deg) translateY(0); z-index: 17; }
+        .about-card:nth-child(9) { transform: rotate(42deg) translateY(0); z-index: 18; }
+        .about-card:nth-child(10) { transform: rotate(54deg) translateY(0); z-index: 19; }
 
-        .game-grid-container {
-            display: grid;
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
+        .about-card:hover {
+            z-index: 50 !important;
+            transform: scale(1.18) rotate(var(--hover-rot, 0deg)) translateY(-40px) !important;
         }
-        @media (min-width: 640px) { .game-grid-container { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (min-width: 1024px) { .game-grid-container { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        
-        .game-card-node {
-            position: relative;
-            border-radius: 16px;
-            height: auto; 
-            overflow: hidden;
-            background: var(--card);
-            border: 1px solid rgba(242, 199, 135, 0.15);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s;
-        }
-        .game-card-node:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -15px rgba(242, 199, 135, 0.25);
-            border-color: var(--primary);
-        }
+        .about-card:nth-child(1):hover { --hover-rot: -54deg; }
+        .about-card:nth-child(2):hover { --hover-rot: -42deg; }
+        .about-card:nth-child(3):hover { --hover-rot: -30deg; }
+        .about-card:nth-child(4):hover { --hover-rot: -18deg; }
+        .about-card:nth-child(5):hover { --hover-rot: -6deg; }
+        .about-card:nth-child(6):hover { --hover-rot: 6deg; }
+        .about-card:nth-child(7):hover { --hover-rot: 18deg; }
+        .about-card:nth-child(8):hover { --hover-rot: 30deg; }
+        .about-card:nth-child(9):hover { --hover-rot: 42deg; }
+        .about-card:nth-child(10):hover { --hover-rot: 54deg; }
 
         .video-grid-container {
             display: flex;
@@ -328,49 +378,6 @@
             }
         }
 
-        .semi-circle-stage {
-            position: relative;
-            width: 100%;
-            height: 560px; 
-            margin-top: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        .about-card {
-            position: absolute !important;
-            width: 150px;
-            height: 220px;
-            transform-origin: center 700px; 
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0.2s;
-            will-change: transform;
-        }
-        .about-card:nth-child(1) { transform: rotate(-54deg) translateY(0); z-index: 10; }
-        .about-card:nth-child(2) { transform: rotate(-42deg) translateY(0); z-index: 11; }
-        .about-card:nth-child(3) { transform: rotate(-30deg) translateY(0); z-index: 12; }
-        .about-card:nth-child(4) { transform: rotate(-18deg) translateY(0); z-index: 13; }
-        .about-card:nth-child(5) { transform: rotate(-6deg) translateY(0); z-index: 14; }
-        .about-card:nth-child(6) { transform: rotate(6deg) translateY(0); z-index: 15; }
-        .about-card:nth-child(7) { transform: rotate(18deg) translateY(0); z-index: 16; }
-        .about-card:nth-child(8) { transform: rotate(30deg) translateY(0); z-index: 17; }
-        .about-card:nth-child(9) { transform: rotate(42deg) translateY(0); z-index: 18; }
-        .about-card:nth-child(10) { transform: rotate(54deg) translateY(0); z-index: 19; }
-
-        .about-card:hover {
-            z-index: 50 !important;
-            transform: scale(1.18) rotate(var(--hover-rot, 0deg)) translateY(-40px) !important;
-        }
-        .about-card:nth-child(1):hover { --hover-rot: -54deg; }
-        .about-card:nth-child(2):hover { --hover-rot: -42deg; }
-        .about-card:nth-child(3):hover { --hover-rot: -30deg; }
-        .about-card:nth-child(4):hover { --hover-rot: -18deg; }
-        .about-card:nth-child(5):hover { --hover-rot: -6deg; }
-        .about-card:nth-child(6):hover { --hover-rot: 6deg; }
-        .about-card:nth-child(7):hover { --hover-rot: 18deg; }
-        .about-card:nth-child(8):hover { --hover-rot: 30deg; }
-        .about-card:nth-child(9):hover { --hover-rot: 42deg; }
-        .about-card:nth-child(10):hover { --hover-rot: 54deg; }
-
         .folder-wrapper {
             position: relative;
             width: 200px;
@@ -449,6 +456,7 @@
         
         #modal-card-editor::-webkit-scrollbar { width: 4px; }
         #modal-card-editor::-webkit-scrollbar-thumb { background: rgba(242, 199, 135, 0.5); border-radius: 999px; }
+
     </style>
 </head>
 <body>
@@ -469,9 +477,9 @@
         <div class="flex items-center gap-1 md:gap-1.5 text-[11px] font-bold tracking-wider">
             <button onclick="scrollToSection('home', this)" class="nav-item nav-item-active px-2.5 py-1 rounded-full transition-all duration-200">HOME</button>
             <button onclick="scrollToSection('works', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">WORKS</button>
+            <button onclick="scrollToSection('about', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">ABOUT ME</button>
             <button onclick="scrollToSection('projects', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">PROJECTS</button>
             <button onclick="scrollToSection('internship', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">INTERNSHIP</button>
-            <button onclick="scrollToSection('about', this)" class="nav-item px-2.5 py-1 rounded-full transition-all duration-200">ABOUT ME</button>
         </div>
 
         <div class="flex items-center gap-1.5 border-l border-gray-200 dark:border-gray-700 pl-3">
@@ -491,7 +499,6 @@
     <section id="home" class="w-full h-screen flex items-center justify-center px-6 md:px-20 pt-16 overflow-hidden relative bg-transparent z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full max-w-7xl relative z-10">
             <div class="lg:col-span-5 relative h-[380px] flex items-center justify-center select-none">
-                
                 <div class="polaroid absolute w-48 h-60 rotate-[-8deg] translate-x-[-40px] translate-y-[-20px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
                     <div class="w-full h-44 bg-gray-100 dark:bg-gray-700 rounded mb-2 overflow-hidden flex items-center justify-center relative">
                         <i class="fa-regular fa-image text-3xl text-gray-400"></i>
@@ -499,7 +506,6 @@
                     </div>
                     <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Visual Mind</p>
                 </div>
-
                 <div class="polaroid absolute w-48 h-60 rotate-[5deg] translate-x-[50px] translate-y-[10px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
                     <div class="w-full h-44 bg-gray-200 dark:bg-gray-600 rounded mb-2 overflow-hidden flex items-center justify-center relative">
                         <i class="fa-solid fa-wand-magic-sparkles text-3xl text-gray-400"></i>
@@ -507,7 +513,6 @@
                     </div>
                     <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Coding Space</p>
                 </div>
-
                 <div class="polaroid absolute w-48 h-60 rotate-[-3deg] translate-x-[5px] translate-y-[40px] hover:z-30 hover:rotate-0 hover:-translate-y-10 transition-all duration-500 cursor-pointer bg-white dark:bg-gray-800 p-3 pb-6 shadow-xl rounded-sm border border-gray-100 dark:border-gray-700">
                     <div class="w-full h-44 bg-gray-300 dark:bg-gray-500 rounded mb-2 overflow-hidden flex items-center justify-center relative">
                         <i class="fa-solid fa-camera-retro text-3xl text-gray-200"></i>
@@ -515,7 +520,6 @@
                     </div>
                     <p class="en-font text-xl text-center text-gray-700 dark:text-gray-100">Daily Life</p>
                 </div>
-
             </div>
 
             <div class="lg:col-span-7 flex flex-col space-y-5 bg-transparent">
@@ -529,8 +533,25 @@
                 
                 <div id="intro-paragraph" class="wenkai-font text-gray-700 dark:text-white text-[13px] md:text-[14px] font-bold tracking-wide leading-relaxed space-y-2.5 border-l-2 border-[#f2c787] pl-4 transition-colors duration-300">
                 </div>
-
                 <div id="keywords-box" class="flex flex-wrap gap-2 pt-1 wenkai-font">
+                </div>
+
+                <div class="mt-4 space-y-2">
+                    <div class="flex flex-row flex-nowrap md:flex-wrap gap-1 md:gap-1.5 items-center overflow-x-auto hide-scrollbar w-full">
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i> Gemini</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-brain text-purple-500"></i> Claude</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-code text-green-500"></i> Codex</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-robot text-emerald-500"></i> Chat GPT</span>
+                    </div>
+                    <div class="flex flex-row flex-nowrap md:flex-wrap gap-1 md:gap-1.5 items-center overflow-x-auto hide-scrollbar w-full pb-1">
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-video text-pink-500"></i> Seedance</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-tv text-indigo-500"></i> Libtv</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-palette text-orange-500"></i> midjourny</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-image text-blue-400"></i> PS</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-brands fa-figma text-red-400"></i> Figma</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-heart text-rose-500"></i> lovart</span>
+                        <span class="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200/50 dark:border-gray-700/50 shadow-sm text-gray-700 dark:text-gray-200 text-[9px] font-bold tracking-wide transition-all"><i class="fa-solid fa-mobile-screen text-cyan-500"></i> tapnow</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -542,6 +563,7 @@
                 <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase" id="works-page-tag">PAGE 02</div>
                 <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white" id="works-main-title">WORK</h2>
                 <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200" id="works-desc-title">AI Vibecoding ——从概念到落地、从视觉到叙事</p>
+                <p class="wenkai-font text-[10px] font-extrabold text-gray-900 dark:text-white mt-1 pt-1 tracking-wide">以下四个板块的内容点击图片均可查看详细信息</p>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 border-t border-b border-gray-200/30 py-4 font-bold text-sm tracking-wider flex-wrap">
@@ -554,79 +576,12 @@
             <div id="works-display-container" class="w-full min-h-[480px] flex items-center justify-center relative">
                 
                 <div id="panel-visual" class="w-full transition-all duration-500 block">
-                    <div class="orbit-container" id="orbit-images-container">
-                        <div class="orbit-scaling-container">
-                            <svg class="orbit-path-svg" id="orbit-svg-element">
-                                <ellipse id="dynamic-orbit-ellipse" fill="none" stroke="var(--orbit-path)" stroke-width="2" stroke-dasharray="6 4" />
-                            </svg>
-                            <div id="orbit-items-dynamic-slot"></div>
-                        </div>
+                    <div id="trail-container" class="content" style="height: 500px; position: relative; overflow: hidden; width: 100%;">
                     </div>
                 </div>
 
-                <div id="panel-game" class="w-full transition-all duration-500 hidden">
-                    <div class="game-grid-container">
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(0)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_1.jpg" class="w-full h-full object-cover opacity-90" alt="Game 1">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-[#f2c787] bg-[#f2c787]/10 px-2 py-0.5 rounded-md uppercase">Mechanics</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">星穹浮空王城：魔幻科幻主城场景</h4>
-                            </div>
-                        </div>
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(1)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_2.jpg" class="w-full h-full object-cover opacity-90" alt="Game 2">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md uppercase">Interface</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">深海幻城交互场景</h4>
-                            </div>
-                        </div>
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(2)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_3.jpg" class="w-full h-full object-cover opacity-90" alt="Game 3">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-md uppercase">Ecosystem</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">云涧仙峦・水墨国风</h4>
-                            </div>
-                        </div>
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(3)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_4.jpg" class="w-full h-full object-cover opacity-90" alt="Game 4">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md uppercase">Concept</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">绿野浮空境混合开放大世界</h4>
-                            </div>
-                        </div>
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(4)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_5.jpg" class="w-full h-full object-cover opacity-90" alt="Game 5">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase">Logic</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">凌霄天宫仙侠场景</h4>
-                            </div>
-                        </div>
-                        <div class="game-card-node flex flex-col justify-between p-5" onclick="openGameMediaModal(5)">
-                            <div class="w-full aspect-[3/2] bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden relative">
-                                <img src="./assets/images/game_project_6.jpg" class="w-full h-full object-cover opacity-90" alt="Game 6">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-[9px] font-extrabold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md uppercase">Prototype</span>
-                                <h4 class="font-bold text-xs text-gray-900 dark:text-white mt-1">青溪莲谷・隐世支线秘境</h4>
-                            </div>
-                        </div>
-                    </div>
+                <div id="panel-game" class="w-full transition-all duration-500 hidden relative min-h-[600px] flex items-center justify-center pt-8">
+                    <div id="game-card-swap" class="card-swap-container"></div>
                 </div>
 
                 <div id="panel-video" class="w-full transition-all duration-500 hidden">
@@ -650,12 +605,31 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="video-card-node" onclick="openVideoPlayerModal('./assets/videos/video-03.mp4', '原创《夜归人》唐风机甲史诗短片')">
+                            <div class="video-preview-shell flex items-center justify-center">
+                                <img src="./assets/images/video_03_cover.jpg" class="w-full h-full object-cover" alt="Video 2">
+                                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-sm shadow-lg border border-white/30 hover:scale-110 transition-transform"><i class="fa-solid fa-play"></i></div>
+                                </div>
+                            </div>
+                            <div class="flex-1 p-5 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[9px] font-bold text-blue-500 tracking-wider">DIRECTOR / EDITING</span>
+                                    <h4 class="font-extrabold text-sm text-gray-900 dark:text-white mt-0.5">原创《夜归人》唐风机甲史诗短片</h4>
+                                    <p class="wenkai-font text-[11px] text-gray-500 dark:text-gray-200 mt-1 leading-relaxed">架空背景公元六百二十二年，乱世割据山河未定，短片《夜归人》立足虚实交织的架空初唐世界观，以 “盛世烟火” 与 “无声献祭” 双重视角，铺展一段掩埋在满城繁华之下、独属于清醒归人的悲凉宿命记忆。</p>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-gray-400 dark:text-gray-300 font-bold pt-3 border-t border-gray-100 dark:border-slate-800">
+                                    <span>时长: 05:10</span>
+                                    <span>软件: Premiere / DaVinci Resolve</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div id="panel-writing" class="w-full transition-all duration-500 hidden">
                     <div class="flex flex-col sm:flex-row justify-center items-center gap-12 sm:gap-24 py-16">
-                        
                         <div class="flex flex-col items-center gap-4">
                             <div class="folder-wrapper" onclick="openWritingModal(1)">
                                 <div class="folder-back"></div>
@@ -691,7 +665,6 @@
                                 <span class="text-[10px] text-gray-400 mt-1 block" id="folder-sub-2">点击图片可跳转相关链接</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -699,10 +672,177 @@
         </div>
     </section>
 
+    <!-- Page 03 Modified Section -->
+    <section id="about" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10 overflow-hidden">
+        <div class="max-w-7xl w-full mx-auto">
+            <div class="space-y-1">
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 03</div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">ABOUT ME</h2>
+                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200">手工、阅读、徒步……每一份热爱都是我与世界对话的语言</p>
+            </div>
+
+            <div class="semi-circle-stage">
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_01.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Handmade</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">各类手工（手串、拼豆等）</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">将散落的色彩编码成可佩戴的微小叙事。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_02.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Explore</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">旷野踪迹</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">徒步、登山，在冰川、山地中读取地理的浪漫史诗。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_03.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Tarvel</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">热爱旅行</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">热爱旅行，热爱拍照，想要读世界更多的书。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_04.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Cuisine</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">摄影爱好者</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">热爱摄影，通过取景框的纪录，让瞬间的记忆成永恒的情感切片。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_05.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Design</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">游戏</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">亲手编织只属于我的叙事弧线。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_06.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Thinker</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">博物馆</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">文明切片与时空压缩，在静默展柜前解码千年回响的暗语。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_07.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Game</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">绘画</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">颜料与笔触的共谋，在二维平面引爆三维的情绪星云。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_08.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Reading</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">kpop文化</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">追Kpop的日子用汗水与热爱把梦想淬炼成舞台上的滚烫光芒。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_09.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Connection</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">网文小说</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">302本，416小时43分钟，沉浸于悬疑阅读的迷宫。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-inner">
+                        <div class="about-card-front polaroid w-full h-full">
+                            <div class="w-full h-[155px] rounded overflow-hidden mb-2">
+                                <img src="./assets/images/page05_about_card_10.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">The Future</p>
+                        </div>
+                        <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
+                            <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">Future Loading...</h4>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">永远保持对未知的好奇与敬畏，编写未完待续的人生。</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> 
+
+        </div>
+    </section>
+    <!-- End of Modified Section -->
+
     <section id="projects" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10">
         <div class="max-w-4xl w-full mx-auto space-y-12">
             <div class="space-y-1">
-                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 03</div>
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 04</div>
                 <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">PROJECTS</h2>
                 <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200" id="proj-desc">点燃想法 &nbsp;照亮过程&nbsp; 留下温度</p>
             </div>
@@ -793,7 +933,7 @@
     <section id="internship" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10 overflow-hidden">
         <div class="max-w-4xl w-full mx-auto space-y-12">
             <div class="space-y-1">
-                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 04</div>
+                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 05</div>
                 <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">INTERNSHIP</h2>
                 <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200">从执行到思考，把每一天都变成可复用的经验</p>
             </div>
@@ -890,175 +1030,12 @@
         </div>
     </section>
 
-    <section id="about" class="w-full min-h-screen flex flex-col justify-center px-6 md:px-20 py-24 relative z-10 border-t border-gray-100/10 overflow-hidden">
-        <div class="max-w-7xl w-full mx-auto space-y-4">
-            <div class="space-y-1">
-                <div class="text-[#ba5700] font-bold tracking-widest text-xs uppercase">PAGE 05</div>
-                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">ABOUT ME</h2>
-                <p class="wenkai-font text-sm opacity-80 text-gray-500 dark:text-gray-200">手工、阅读、徒步……每一份热爱都是我与世界对话的语言</p>
-            </div>
-
-            <div class="semi-circle-stage">
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_01.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Handmade</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">各类手工（手串、拼豆等）</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">将散落的色彩编码成可佩戴的微小叙事。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_02.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Acoustic</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">神秘学爱好者</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">在理性边界外搭建通往潜意识迷宫的隐喻桥梁。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_03.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Explore</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">旷野踪迹</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">徒步、登山，在冰川、山地中读取地理的浪漫史诗。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_04.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Cuisine</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">光影定格</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">热爱摄影，通过取景框的纪录，让瞬间的记忆成永恒的情感切片。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_05.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Design</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">游戏</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">亲手编织只属于我的叙事弧线。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_06.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Thinker</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">博物馆</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">文明切片与时空压缩，在静默展柜前解码千年回响的暗语。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_07.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Game</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">绘画</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">颜料与笔触的共谋，在二维平面引爆三维的情绪星云。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_08.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Reading</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">kpop文化</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">追Kpop的日子用汗水与热爱把梦想淬炼成舞台上的滚烫光芒。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_09.jpg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">Connection</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">悬疑解谜</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">沉浸于悬疑阅读的迷宫，在解谜的刀锋上打磨出严密的逻辑链条。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-inner">
-                    <div class="about-card-front polaroid w-full h-full">
-                        <div class="w-full h-[155px] rounded overflow-hidden mb-2">
-                            <img src="./assets/images/page05_about_card_10.pg" class="w-full h-full object-cover">
-                        </div>
-                        <p class="en-font text-sm text-center text-gray-700 dark:text-gray-100">The Future</p>
-                    </div>
-                    <div class="about-card-back polaroid w-full h-full bg-blue-50 dark:bg-slate-800 flex flex-col justify-center p-3 text-center border border-[#f2c787]/30">
-                        <h4 class="font-extrabold text-[11px] text-[#ba5700] mb-1">Future Loading...</h4>
-                        <p class="text-[9px] text-gray-500 dark:text-gray-200 leading-relaxed font-bold">永远保持对未知的好奇与敬畏，编写未完待续的人生。</p>
-                    </div>
-                </div>
-            </div>
-
-        </div> 
-
-            <div class="text-center py-2 select-none border-t border-gray-200/10">
-                <p class="text-lg md:text-xl font-medium tracking-wide italic text-gray-400 dark:text-gray-300 transition-transform duration-300 hover:translate-y-[-2px]" id="about-footer-quote">
-                    "Everything I create begins with observation."
-                </p>
-            </div>
-        </div>
-    </section>
+    <!-- Global Footer Quote placed at the very bottom of the page -->
+    <div class="w-full text-center py-12 select-none bg-transparent z-10 relative">
+        <p class="text-lg md:text-xl font-medium tracking-wide italic text-gray-400 dark:text-gray-300 transition-transform duration-300 hover:translate-y-[-2px]" id="about-footer-quote">
+            "Everything I create begins with observation."
+        </p>
+    </div>
 
     <div id="iphone-modal" class="fixed inset-0 z-[2500] modal-overlay hidden flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" onclick="closeIphoneModal()">
         <div class="w-[340px] h-[640px] bg-slate-900 text-slate-900 iphone-frame p-2 flex flex-col relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
@@ -1326,7 +1303,8 @@
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c5a47e] shadow-sm text-[13px] tracking-wider">日用好物主题视觉 KV 设计</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">主题概念：<span class="text-[#c5a47e] font-extrabold">Bloom Your Everyday</span><br>以清透雾感冰蓝为基底，搭配<span class="text-[#c5a47e] font-extrabold">奶白、浅鎏金</span>提亮<br>将细碎美好事物视觉化，诠释平凡日常的浪漫魔法</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#729490] shadow-sm text-[13px] tracking-wider">luckin coffee | 青苹果茉莉冰茶</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full"><span class="text-[#729490] font-extrabold">宫崎骏限定新品海报</span><br>结合夏日林间光影、<span class="text-[#729490] font-extrabold">青苹果鲜果与龙猫 IP</span> 元素<br>营造治愈清爽的夏日童话饮茶氛围</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b57a66] shadow-sm text-[13px] tracking-wider">《四时》国风生活场景插画系列</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">以<span class="text-[#b57a66] font-extrabold">四季专属自然色调</span>区分四幅画面<br>融合冬雪庭院、盛夏密林、秋枫山谷、灯火古镇<br>搭配古风人物绘出悠然闲适的<span class="text-[#b57a66] font-extrabold">中式烟火意境</span></div>`,
-                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">luckin coffee | 鲜橙西瓜冰椰奶茶</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full"><span class="text-[#7a919e] font-extrabold">酷儿限定新品海报</span><br>采用通透日光写实画风<br>还原海边果茶<span class="text-[#7a919e] font-extrabold">清爽治愈的度假意境</span></div>`
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">luckin coffee | 鲜橙西瓜冰椰奶茶</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full"><span class="text-[#7a919e] font-extrabold">酷儿限定新品海报</span><br>采用通透日光写实画风<br>还原海边果茶<span class="text-[#7a919e] font-extrabold">清爽治愈的度假意境</span></div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#a4b49c] shadow-sm text-[13px] tracking-wider">《一池春水 万顷花潮》春日动态海报</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">采用柔雾粉绿水色基底，以闪粉 “春” 为视觉核心<br>落樱、水波构建春日意象<br>中英文字分层排版融合新中式美学。</div>`
                 ],
                 gameThoughts: [
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#948b9d] shadow-sm text-[13px] tracking-wider">魔幻科幻双风格融合设定</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">打破传统魔幻、纯科幻的单一世界观<br>设定文明掌握<span class="text-[#948b9d] font-extrabold">“能量魔导科技”</span>，以尖顶城堡为根基<br><span class="text-[#948b9d] font-extrabold">蓝光机械、浮空飞碟、全息法阵</span>统一于冰蓝色光效<br>塑造独特的“魔导星际文明”</div>`,
@@ -1334,7 +1312,9 @@
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#809882] shadow-sm text-[13px] tracking-wider">水墨国风原生生态设定</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">借鉴<span class="text-[#809882] font-extrabold">传统水墨山水</span>美学<br>云海、奇峰、溪流构成可自主演化的原生环境<br>主打纯自由生态模拟、无强制主线的<span class="text-[#809882] font-extrabold">开放式玩法</span></div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#748c8b] shadow-sm text-[13px] tracking-wider">上下分层双核心开放地图</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">以<span class="text-[#748c8b] font-extrabold">欧式田园低饱和度绿野</span>为底层基调<br>视觉中心搭配<span class="text-[#748c8b] font-extrabold">高空浮空科幻塔</span><br>形成空间感极强的双核心探索区域</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c29a73] shadow-sm text-[13px] tracking-wider">东方神话天庭枢纽场景</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">鎏金层叠仙殿悬浮云海，<span class="text-[#c29a73] font-extrabold">中心圣光法阵</span>为交互枢纽<br>玉柱祥云廊道清晰分割<span class="text-[#c29a73] font-extrabold">交易、宗门、副本、传送</span>四大区<br>集中承载多人社交与高阶任务入口</div>`,
-                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">独立小型支线休闲秘境</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">大幅弱化战斗，主打<span class="text-[#b48888] font-extrabold">植物收集、水系解谜、隐士奇遇</span><br>荷塘、古亭构建低压休闲场景<br><span class="text-[#b48888] font-extrabold">高饱和翠绿自然色调</span>舒缓视觉，配套独立生态</div>`
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">独立小型支线休闲秘境</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">大幅弱化战斗，主打<span class="text-[#b48888] font-extrabold">植物收集、水系解谜、隐士奇遇</span><br>荷塘、古亭构建低压休闲场景<br><span class="text-[#b48888] font-extrabold">高饱和翠绿自然色调</span>舒缓视觉，配套独立生态</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#a78bfa] shadow-sm text-[13px] tracking-wider">独立小型支线丝绸朋克秘境</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">大幅弱化战斗，主打丝料织造解谜、丝路风物收集、织匠商旅奇遇<br>鎏金机械织坊、琉璃输水栈道、云锦悬楼构建低压休闲场景<br>柔金黛青低饱和绸缎质感色调舒缓视觉，配套独立蚕桑织造生态循环。</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#f472b6] shadow-sm text-[13px] tracking-wider">云端丝绸朋克主城・云阙天都</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">兼顾主线剧情探索与高空休闲支线，主打云航飞艇操控、云锦绸带机关解谜、云海丝路商旅奇遇<br>浮空鎏金机械古建、云海虹桥、织锦飞舟搭建多层立体高空城邦</div>`
                 ]
             },
             EN: {
@@ -1361,7 +1341,8 @@
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c5a47e] shadow-sm text-[13px] tracking-wider">Concept Image 03</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Injecting <span class="text-[#c5a47e] font-extrabold">micro-structural typography rules</span><br>into modern display frames.</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#729490] shadow-sm text-[13px] tracking-wider">Concept Image 04</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Assessing focal point transfers via <br><span class="text-[#729490] font-extrabold">dynamic low-contrast gray scales</span>.</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b57a66] shadow-sm text-[13px] tracking-wider">Concept Image 05</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Balancing <span class="text-[#b57a66] font-extrabold">analogue film grain texture</span><br>with seamless automated interfaces.</div>`,
-                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">Concept Image 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing micro-interaction loops from <br><span class="text-[#7a919e] font-extrabold">macroscopic structural standpoints</span>.</div>`
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#7a919e] shadow-sm text-[13px] tracking-wider">Concept Image 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing micro-interaction loops from <br><span class="text-[#7a919e] font-extrabold">macroscopic structural standpoints</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#a4b49c] shadow-sm text-[13px] tracking-wider">Concept Image 07</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing micro-interaction loops from <br><span class="text-[#7a919e] font-extrabold">macroscopic structural standpoints</span>.</div>`
                 ],
                 gameThoughts: [
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#948b9d] shadow-sm text-[13px] tracking-wider">Game Spec 01</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Optimizing narrative arc and progression paths using<br><span class="text-[#948b9d] font-extrabold">multi-stage core beat structures</span>.</div>`,
@@ -1369,7 +1350,9 @@
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#809882] shadow-sm text-[13px] tracking-wider">Game Spec 03</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Crafting autonomous AI state machines for sprawling<br><span class="text-[#809882] font-extrabold">dynamic sandbox ecologies</span>.</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#748c8b] shadow-sm text-[13px] tracking-wider">Game Spec 04</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Projecting eldritch atmosphere metrics via<br><span class="text-[#748c8b] font-extrabold">abstract non-Euclidean linear designs</span>.</div>`,
                     `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#c29a73] shadow-sm text-[13px] tracking-wider">Game Spec 05</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Modeling open-economy balance thresholds via<br><span class="text-[#c29a73] font-extrabold">state-driven regression vectors</span>.</div>`,
-                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">Game Spec 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing gray-box fast prototype playtest heats to ensure<br><span class="text-[#b48888] font-extrabold">instantaneous fun loops</span>.</div>`
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#b48888] shadow-sm text-[13px] tracking-wider">Game Spec 06</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing gray-box fast prototype playtest heats to ensure<br><span class="text-[#b48888] font-extrabold">instantaneous fun loops</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#a78bfa] shadow-sm text-[13px] tracking-wider">Game Spec 07</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing gray-box fast prototype playtest heats to ensure<br><span class="text-[#a78bfa] font-extrabold">instantaneous fun loops</span>.</div>`,
+                    `<div class="inline-block px-3 py-1 mb-2 rounded text-white font-bold bg-[#f472b6] shadow-sm text-[13px] tracking-wider">Game Spec 08</div><div class="text-[12px] text-gray-800 dark:text-gray-200 leading-relaxed w-full">Reviewing gray-box fast prototype playtest heats to ensure<br><span class="text-[#f472b6] font-extrabold">instantaneous fun loops</span>.</div>`
                 ]
             }
         };
@@ -1380,175 +1363,312 @@
             "./assets/images/visual_orbit_3.jpg",
             "./assets/images/visual_orbit_4.jpg",
             "./assets/images/visual_orbit_5.jpg",
-            "./assets/images/visual_orbit_6.jpg"
-        ];
-
-        const gameImages = [
-            "./assets/images/game_project_1.jpg",
-            "./assets/images/game_project_2.jpg",
-            "./assets/images/game_project_3.jpg",
-            "./assets/images/game_project_4.jpg",
-            "./assets/images/game_project_5.jpg",
-            "./assets/images/game_project_6.jpg"
+            "./assets/images/visual_orbit_6.jpg",
+            "./assets/images/visual_orbit_7.jpg"
         ];
         
-        const writingData = {
-            1: {
-                images: [
-                    { src: "./assets/images/work_writing_1.jpg", link: "" },
-                    { src: "./assets/images/work_writing_2.jpg", link: "" },
-                    { src: "./assets/images/work_writing_3.jpg", link: "" },
-                    { src: "./assets/images/work_writing_4.jpg", link: "https://mp.weixin.qq.com/s/ZrsNFdZEFk1bxC23vnATvg" },
-                    { src: "./assets/images/work_writing_5.jpg", link: "https://mp.weixin.qq.com/s/hc2pV1s6lJy_bGNNP1KhHg" },
-                    { src: "./assets/images/work_writing_6.jpg", link: "" }
-                ]
-            },
-            2: {
-                images: [
-                    { src: "./assets/images/work_writing_7.jpg", link: "https://kns.cnki.net/kcms2/article/abstract?v=yAka2kXFwSRhYx_1s53mU1b4ivjE9BN5QytO-ZdVysWEYELRBgqXiDgQ3AYZvh-3vXohQE21winjqVi9xkH8hqAxhCxOcJyDMWx4w_xI55jnFJ8lNq5odQpEX2uxvw21JwMC3gXtFCwcIFvWTEMrcTNb5mU1HR4IqdndXsAoGqU&uniplatform=NZKPT&captchaId=ae96880e-8c38-4880-8ae5-a2266f782c6a" },
-                    { src: "./assets/images/work_writing_8.jpg", link: "https://mp.weixin.qq.com/s/px-JW6gZ3siD2bF0E761zQ?click_id=50" },
-                    { src: "./assets/images/work_writing_9.jpg", link: "https://mp.weixin.qq.com/s/ABAXNWJPJjCGXX__1PSDCw" }
-                ]
-            }
-        };
+        const gameCardsData = [
+            { title: "星穹浮空王城：魔幻科幻主城场景", img: "./assets/images/game_project_1.jpg", tag: "Mechanics", color: "#f2c787" },
+            { title: "深海幻城交互场景", img: "./assets/images/game_project_2.jpg", tag: "Interface", color: "#60a5fa" },
+            { title: "云涧仙峦・水墨国风", img: "./assets/images/game_project_3.jpg", tag: "Ecosystem", color: "#c084fc" },
+            { title: "绿野浮空境混合开放大世界", img: "./assets/images/game_project_4.jpg", tag: "Concept", color: "#34d399" },
+            { title: "凌霄天宫仙侠场景", img: "./assets/images/game_project_5.jpg", tag: "Logic", color: "#22d3ee" },
+            { title: "青溪莲谷・隐世支线秘境", img: "./assets/images/game_project_6.jpg", tag: "Prototype", color: "#fb7185" },
+            { title: "独立小型支线丝绸朋克秘境", img: "./assets/images/game_project_7.jpg", tag: "Secret Realm", color: "#a78bfa" },
+            { title: "云端丝绸朋克主城・云阙天都", img: "./assets/images/game_project_11.jpg", tag: "Metropolis", color: "#f472b6" }
+        ];
 
-        let orbitPercentProgress = 0; 
-        let isOrbitPaused = false;
         let activeImageIndex = null;
         let activeSourceType = 'visual'; 
-        
-        let carouselInterval;
-        let currentCarouselIndex = 0;
-        const totalCarouselImages = 4;
+        let activeCarouselInterval;
+        let activeCarouselIndex = 0;
 
-        function startOrbitCarousel() {
-            currentCarouselIndex = 0;
-            updateCarouselVisibility();
-            carouselInterval = setInterval(() => {
-                currentCarouselIndex = (currentCarouselIndex + 1) % totalCarouselImages;
-                updateCarouselVisibility();
-            }, 1200); 
-        }
-
-        function stopOrbitCarousel() {
-            if (carouselInterval) clearInterval(carouselInterval);
-        }
-
-        function updateCarouselVisibility() {
-            for (let i = 0; i < totalCarouselImages; i++) {
-                const img = document.getElementById(`carousel-img-${i}`);
-                if (!img) continue;
-                if (i === currentCarouselIndex) {
-                    img.classList.remove('opacity-0');
-                    img.classList.add('opacity-100');
-                } else {
-                    img.classList.remove('opacity-100');
-                    img.classList.add('opacity-0');
-                }
-            }
-        }
-
-        function initOrbitImagesDom() {
-            const slot = document.getElementById('orbit-items-dynamic-slot');
-            slot.innerHTML = ''; 
-            images.forEach((src, idx) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'orbit-item';
-                itemDiv.id = `orbit-item-node-${idx}`;
-                itemDiv.style.width = '80px';
-                itemDiv.style.height = '80px';
-                itemDiv.innerHTML = `<img src="${src}" alt="Orbit Graphic" class="orbit-image" draggable="false">`;
-                itemDiv.onclick = () => openOrbitModal(idx);
-                slot.appendChild(itemDiv);
-            });
-            syncOrbitTrackBounds();
-        }
-
-        function syncOrbitTrackBounds() {
-            const container = document.getElementById('orbit-images-container');
-            const ellipse = document.getElementById('dynamic-orbit-ellipse');
-            if (!container || !ellipse) return null;
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            const scaleFactor = w / 1400;
-            const rx = 340 * scaleFactor;
-            const ry = 80 * scaleFactor;
-            ellipse.setAttribute('cx', w / 2);
-            ellipse.setAttribute('cy', h / 2);
-            ellipse.setAttribute('rx', rx);
-            ellipse.setAttribute('ry', ry);
-            ellipse.style.transform = `rotate(-8deg)`;
-            ellipse.style.transformOrigin = `${w/2}px ${h/2}px`;
-            return { cx: w / 2, cy: h / 2, rx, ry };
-        }
-
-        function renderOrbitTick() {
-            if (!isOrbitPaused) {
-                orbitPercentProgress += (100 / (30 * 60)); 
-                if (orbitPercentProgress >= 100) orbitPercentProgress = 0;
-            }
-            const bounds = syncOrbitTrackBounds();
-            if (bounds) {
-                const { cx, cy, rx, ry } = bounds;
-                const rotationRad = -8 * Math.PI / 180;
-                images.forEach((_, idx) => {
-                    const item = document.getElementById(`orbit-item-node-${idx}`);
-                    if (!item) return;
-                    const itemOffset = (idx / images.length) * 100;
-                    const currentItemPercent = (orbitPercentProgress + itemOffset) % 100;
-                    const rad = (currentItemPercent / 100) * Math.PI * 2;
-                    const localX = rx * Math.cos(rad);
-                    const localY = ry * Math.sin(rad);
-                    const rotatedX = localX * Math.cos(rotationRad) - localY * Math.sin(rotationRad);
-                    const rotatedY = localX * Math.sin(rotationRad) + localY * Math.cos(rotationRad);
-                    const finalX = cx + rotatedX - 40;
-                    const finalY = cy + rotatedY - 40;
-                    const zIndex = Math.round(Math.sin(rad) * 100) + 200;
-                    const depthScale = 0.8 + (Math.sin(rad) + 1) * 0.2; 
-                    const depthOpacity = 0.5 + (Math.sin(rad) + 1) * 0.25;
-                    item.style.transform = `translate(${finalX}px, ${finalY}px) scale(${depthScale})`;
-                    item.style.zIndex = zIndex;
-                    item.style.opacity = depthOpacity;
+        function startDynamicCarousel(imagesArray, intervalMs) {
+            const container = document.getElementById('modal-carousel-container');
+            container.innerHTML = imagesArray.map((src, i) => `<img id="dyn-car-${i}" src="${src}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${i===0 ? 'opacity-100' : 'opacity-0'}">`).join('');
+            container.classList.remove('hidden');
+            activeCarouselIndex = 0;
+            clearInterval(activeCarouselInterval);
+            activeCarouselInterval = setInterval(() => {
+                activeCarouselIndex = (activeCarouselIndex + 1) % imagesArray.length;
+                imagesArray.forEach((_, i) => {
+                    const el = document.getElementById(`dyn-car-${i}`);
+                    if(el) {
+                        el.classList.toggle('opacity-100', i === activeCarouselIndex);
+                        el.classList.toggle('opacity-0', i !== activeCarouselIndex);
+                    }
                 });
-            }
-            requestAnimationFrame(renderOrbitTick);
+            }, intervalMs);
         }
 
+        function stopDynamicCarousel() {
+            clearInterval(activeCarouselInterval);
+            const container = document.getElementById('modal-carousel-container');
+            if(container) container.classList.add('hidden');
+        }
+
+        // ---------- ImageTrail Vanilla JS Implementation ---------- //
+        function lerp(a, b, n) { return (1 - n) * a + n * b; }
+
+        function getLocalPointerPos(e, rect) {
+            let clientX = 0, clientY = 0;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX; clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX; clientY = e.clientY;
+            }
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function getMouseDistance(p1, p2) {
+            const dx = p1.x - p2.x; const dy = p1.y - p2.y;
+            return Math.hypot(dx, dy);
+        }
+
+        class ImageItem {
+            constructor(DOM_el, index) {
+                this.DOM = { el: DOM_el, inner: DOM_el.querySelector('.content__img-inner') };
+                this.defaultStyle = { scale: 1, x: 0, y: 0, opacity: 0 };
+                this.index = index;
+                this.getRect();
+                this.initEvents();
+            }
+            initEvents() {
+                this.resize = () => { gsap.set(this.DOM.el, this.defaultStyle); this.getRect(); };
+                window.addEventListener('resize', this.resize);
+                this.DOM.el.addEventListener('click', () => openOrbitModal(this.index));
+            }
+            getRect() { this.rect = this.DOM.el.getBoundingClientRect(); }
+        }
+
+        class ImageTrailVariant1 {
+            constructor(container) {
+                this.container = container;
+                this.DOM = { el: container };
+                this.images = [...this.DOM.el.querySelectorAll('.content__img')].map((img, i) => new ImageItem(img, i));
+                this.imagesTotal = this.images.length;
+                this.imgPosition = 0;
+                this.zIndexVal = 1;
+                this.activeImagesCount = 0;
+                this.isIdle = true;
+                this.threshold = 80;
+
+                this.mousePos = { x: 0, y: 0 };
+                this.lastMousePos = { x: 0, y: 0 };
+                this.cacheMousePos = { x: 0, y: 0 };
+
+                const handlePointerMove = ev => {
+                    const rect = this.container.getBoundingClientRect();
+                    this.mousePos = getLocalPointerPos(ev, rect);
+                };
+                container.addEventListener('mousemove', handlePointerMove, { passive: true });
+                container.addEventListener('touchmove', handlePointerMove, { passive: true });
+
+                const initRender = ev => {
+                    const rect = this.container.getBoundingClientRect();
+                    this.mousePos = getLocalPointerPos(ev, rect);
+                    this.cacheMousePos = { ...this.mousePos };
+                    requestAnimationFrame(() => this.render());
+                    container.removeEventListener('mousemove', initRender);
+                    container.removeEventListener('touchmove', initRender);
+                };
+                container.addEventListener('mousemove', initRender, { passive: true });
+                container.addEventListener('touchmove', initRender, { passive: true });
+            }
+
+            render() {
+                let distance = getMouseDistance(this.mousePos, this.lastMousePos);
+                this.cacheMousePos.x = lerp(this.cacheMousePos.x, this.mousePos.x, 0.15);
+                this.cacheMousePos.y = lerp(this.cacheMousePos.y, this.mousePos.y, 0.15);
+
+                if (distance > this.threshold) {
+                    this.showNextImage();
+                    this.lastMousePos = { ...this.mousePos };
+                }
+                if (this.isIdle && this.zIndexVal !== 1) this.zIndexVal = 1;
+                requestAnimationFrame(() => this.render());
+            }
+
+            showNextImage() {
+                ++this.zIndexVal;
+                this.imgPosition = this.imgPosition < this.imagesTotal - 1 ? this.imgPosition + 1 : 0;
+                const img = this.images[this.imgPosition];
+
+                gsap.killTweensOf(img.DOM.el);
+                gsap.timeline({
+                        onStart: () => this.onImageActivated(),
+                        onComplete: () => this.onImageDeactivated()
+                    })
+                    .fromTo(img.DOM.el, 
+                        { opacity: 1, scale: 1, zIndex: this.zIndexVal, x: this.cacheMousePos.x - img.rect.width / 2, y: this.cacheMousePos.y - img.rect.height / 2 },
+                        { duration: 0.4, ease: 'power1', x: this.mousePos.x - img.rect.width / 2, y: this.mousePos.y - img.rect.height / 2 }, 0)
+                    .to(img.DOM.el, { duration: 0.4, ease: 'power3', opacity: 0, scale: 0.2 }, 0.4);
+            }
+
+            onImageActivated() { this.activeImagesCount++; this.isIdle = false; }
+            onImageDeactivated() {
+                this.activeImagesCount--;
+                if (this.activeImagesCount === 0) this.isIdle = true;
+            }
+        }
+
+        function initImageTrail() {
+            const container = document.getElementById('trail-container');
+            if(!container) return;
+            container.innerHTML = images.map((src) => `
+                <div class="content__img">
+                    <div class="content__img-inner" style="background-image: url('${src}')"></div>
+                </div>
+            `).join('');
+            setTimeout(() => { new ImageTrailVariant1(container); }, 100);
+        }
+
+        // ---------- CardSwap Vanilla JS Implementation ---------- //
+        function initGameCardSwap() {
+            const container = document.getElementById('game-card-swap');
+            if(!container) return;
+            
+            const cardDistance = 35; 
+            const verticalDistance = 45;
+            const skewAmount = 6;
+            const total = gameCardsData.length;
+            
+            gameCardsData.forEach((d, i) => {
+                const card = document.createElement('div');
+                card.className = "game-swap-card overflow-hidden cursor-pointer flex flex-col justify-between";
+                card.id = `game-swap-card-${i}`;
+                card.onclick = () => openGameMediaModal(i);
+                
+                card.innerHTML = `
+                    <div class="absolute inset-0 z-0">
+                        <img src="${d.img}" class="w-full h-full object-cover opacity-80" alt="${d.title}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 p-6 mt-auto">
+                        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider" style="color: ${d.color}; background: ${d.color}25; backdrop-filter: blur(4px);">${d.tag}</span>
+                        <h4 class="font-bold text-base text-white mt-3 drop-shadow-lg leading-tight tracking-wide">${d.title}</h4>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            const cards = Array.from(document.querySelectorAll('.game-swap-card'));
+            let order = Array.from({length: total}, (_, i) => i);
+            
+            const config = {
+                ease: 'power1.inOut',
+                durDrop: 0.8,
+                durMove: 0.8,
+                durReturn: 0.8,
+                promoteOverlap: 0.45,
+                returnDelay: 0.2
+            };
+
+            const makeSlot = (i) => {
+                const shiftI = i - (total - 1) / 2;
+                return {
+                    x: shiftI * cardDistance,
+                    y: -shiftI * verticalDistance,
+                    z: -i * cardDistance * 1.5,
+                    zIndex: total - i
+                };
+            };
+
+            const placeNow = (el, slot, skew) => {
+                gsap.set(el, {
+                    x: slot.x, y: slot.y, z: slot.z,
+                    xPercent: -50, yPercent: -50,
+                    skewY: skew,
+                    transformOrigin: 'center center',
+                    zIndex: slot.zIndex,
+                    force3D: true
+                });
+            };
+
+            cards.forEach((card, i) => placeNow(card, makeSlot(i), skewAmount));
+
+            let tlActive;
+            const swap = () => {
+                const front = order[0];
+                const rest = order.slice(1);
+                const elFront = document.getElementById(`game-swap-card-${front}`);
+                const tl = gsap.timeline();
+                tlActive = tl;
+
+                tl.to(elFront, { y: '+=200', duration: config.durDrop, ease: config.ease });
+                tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+                
+                rest.forEach((idx, i) => {
+                    const el = document.getElementById(`game-swap-card-${idx}`);
+                    const slot = makeSlot(i);
+                    tl.set(el, { zIndex: slot.zIndex }, 'promote');
+                    tl.to(el, { x: slot.x, y: slot.y, z: slot.z, duration: config.durMove, ease: config.ease }, `promote+=${i * 0.15}`);
+                });
+
+                const backSlot = makeSlot(total - 1);
+                tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
+                tl.call(() => { gsap.set(elFront, { zIndex: backSlot.zIndex }); }, undefined, 'return');
+                tl.to(elFront, { x: backSlot.x, y: backSlot.y, z: backSlot.z, duration: config.durReturn, ease: config.ease }, 'return');
+
+                tl.call(() => { order = [...rest, front]; });
+            };
+
+            const intervalDelay = 2000;
+            let intervalRef = setInterval(swap, intervalDelay);
+            
+            container.addEventListener('mouseenter', () => {
+                if(tlActive) tlActive.pause();
+                clearInterval(intervalRef);
+            });
+            container.addEventListener('mouseleave', () => {
+                if(tlActive) tlActive.play();
+                intervalRef = setInterval(swap, intervalDelay);
+            });
+        }
+        
         function openOrbitModal(index) {
             activeSourceType = 'visual';
             activeImageIndex = index;
-            isOrbitPaused = true; 
             const modal = document.getElementById('orbit-detail-modal');
             const modalBody = document.getElementById('orbit-modal-body');
             const mediaContainer = document.getElementById('modal-media-container');
             const img = document.getElementById('modal-card-img');
             const video = document.getElementById('modal-card-video');
-            const carousel = document.getElementById('modal-carousel-container');
             const editor = document.getElementById('modal-card-editor');
-            
-            if (index === 2) {
-                modalBody.className = "w-[480px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
-                mediaContainer.className = "w-full flex-none aspect-[3/2] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
-            } else {
-                modalBody.className = "w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
-                mediaContainer.className = "w-full flex-none aspect-[2/3] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
-            }
             
             document.getElementById('modal-detail-tag').innerText = "VISUAL INTELLECT";
             editor.innerHTML = contentData[currentLanguage].designThoughts[index];
 
-            video.classList.add('hidden');
-            video.pause();
+            stopDynamicCarousel();
 
-            if (index === 4) {
-                img.classList.add('hidden');
-                carousel.classList.remove('hidden');
-                startOrbitCarousel();
-            } else {
-                stopOrbitCarousel();
-                carousel.classList.add('hidden');
+            if (index === 2) {
+                modalBody.className = "w-[480px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[3/2] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
                 img.classList.remove('hidden');
-                img.src = images[index]; 
+                img.src = images[index];
+                video.classList.add('hidden');
+                video.pause();
+            } else if (index === 4) {
+                modalBody.className = "w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[2/3] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+                img.classList.add('hidden');
+                video.classList.add('hidden');
+                video.pause();
+                startDynamicCarousel(['./assets/images/visual_orbit_5_01.jpg', './assets/images/visual_orbit_5_02.jpg', './assets/images/visual_orbit_5_03.jpg', './assets/images/visual_orbit_5_04.jpg'], 1200);
+            } else if (index === 6) {
+                modalBody.className = "w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[3/4] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+                img.classList.add('hidden');
+                video.classList.remove('hidden');
+                video.src = "./assets/videos/work_video_1.mp4";
+                video.poster = "./assets/images/visual_orbit_7.jpg";
+            } else {
+                modalBody.className = "w-[380px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
+                mediaContainer.className = "w-full flex-none aspect-[2/3] bg-black/5 dark:bg-black/40 rounded-xl overflow-hidden flex items-center justify-center mb-4 border border-gray-200/10 relative";
+                img.classList.remove('hidden');
+                img.src = images[index];
+                video.classList.add('hidden');
+                video.pause();
             }
 
             modal.classList.remove('hidden');
@@ -1566,7 +1686,6 @@
             const mediaContainer = document.getElementById('modal-media-container');
             const img = document.getElementById('modal-card-img');
             const video = document.getElementById('modal-card-video');
-            const carousel = document.getElementById('modal-carousel-container');
             const editor = document.getElementById('modal-card-editor');
             
             modalBody.className = "w-[480px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 flex flex-col justify-between relative transform scale-95 transition-transform duration-300";
@@ -1575,25 +1694,28 @@
             document.getElementById('modal-detail-tag').innerText = "GAME MECHANIC FRAMEWORK";
             editor.innerHTML = contentData[currentLanguage].gameThoughts[index];
 
-            stopOrbitCarousel();
-            carousel.classList.add('hidden');
+            stopDynamicCarousel();
+            img.classList.add('hidden');
+            video.classList.add('hidden');
+            video.pause();
 
-            if (index === 0 || index === 1 || index === 3) {
-                img.classList.add('hidden');
+            if (index === 0) {
                 video.classList.remove('hidden');
-                if (index === 0) {
-                    video.poster = "./assets/images/game_project_1.jpg";
-                    video.src = "./assets/videos/game_video_1.mp4";
-                } else if (index === 1) {
-                    video.poster = "./assets/images/game_project_2.jpg";
-                    video.src = "./assets/videos/game_video_2.mp4";
-                } else if (index === 3) {
-                    video.poster = "./assets/images/game_project_4.jpg";
-                    video.src = "./assets/videos/game_video_4.mp4";
-                }
+                video.poster = "./assets/images/game_project_1.jpg";
+                video.src = "./assets/videos/game_video_1.mp4";
+            } else if (index === 1) {
+                video.classList.remove('hidden');
+                video.poster = "./assets/images/game_project_2.jpg";
+                video.src = "./assets/videos/game_video_2.mp4";
+            } else if (index === 3) {
+                video.classList.remove('hidden');
+                video.poster = "./assets/images/game_project_4.jpg";
+                video.src = "./assets/videos/game_video_4.mp4";
+            } else if (index === 6) {
+                startDynamicCarousel(['./assets/images/game_project_7.jpg', './assets/images/game_project_8.jpg', './assets/images/game_project_12.jpg'], 1000);
+            } else if (index === 7) {
+                startDynamicCarousel(['./assets/images/game_project_11.jpg', './assets/images/game_project_9.jpg', './assets/images/game_project_10.jpg'], 1000);
             } else {
-                video.classList.add('hidden');
-                video.pause();
                 img.classList.remove('hidden');
                 if (index === 2) img.src = "./assets/images/game_project_3.jpg";
                 if (index === 4) img.src = "./assets/images/game_project_5.jpg";
@@ -1608,13 +1730,12 @@
         }
 
         function closeOrbitModal() {
-            isOrbitPaused = false;
             activeImageIndex = null;
             const modal = document.getElementById('orbit-detail-modal');
             const modalBody = document.getElementById('orbit-modal-body');
             const video = document.getElementById('modal-card-video');
             
-            stopOrbitCarousel();
+            stopDynamicCarousel();
             video.pause();
 
             modal.classList.add('opacity-0', 'pointer-events-none');
@@ -1630,7 +1751,23 @@
             title.innerText = contentData[currentLanguage][folderId === 1 ? 'folder1' : 'folder2'];
             container.innerHTML = '';
             
-            writingData[folderId].images.forEach(item => {
+            const wData = {
+                1: [
+                    { src: "./assets/images/work_writing_1.jpg", link: "" },
+                    { src: "./assets/images/work_writing_2.jpg", link: "" },
+                    { src: "./assets/images/work_writing_3.jpg", link: "" },
+                    { src: "./assets/images/work_writing_4.jpg", link: "https://mp.weixin.qq.com/s/ZrsNFdZEFk1bxC23vnATvg" },
+                    { src: "./assets/images/work_writing_5.jpg", link: "https://mp.weixin.qq.com/s/hc2pV1s6lJy_bGNNP1KhHg" },
+                    { src: "./assets/images/work_writing_6.jpg", link: "" }
+                ],
+                2: [
+                    { src: "./assets/images/work_writing_7.jpg", link: "https://kns.cnki.net/kcms2/article/abstract?v=yAka2kXFwSRhYx_1s53mU1b4ivjE9BN5QytO-ZdVysWEYELRBgqXiDgQ3AYZvh-3vXohQE21winjqVi9xkH8hqAxhCxOcJyDMWx4w_xI55jnFJ8lNq5odQpEX2uxvw21JwMC3gXtFCwcIFvWTEMrcTNb5mU1HR4IqdndXsAoGqU&uniplatform=NZKPT&captchaId=ae96880e-8c38-4880-8ae5-a2266f782c6a" },
+                    { src: "./assets/images/work_writing_8.jpg", link: "https://mp.weixin.qq.com/s/px-JW6gZ3siD2bF0E761zQ?click_id=50" },
+                    { src: "./assets/images/work_writing_9.jpg", link: "https://mp.weixin.qq.com/s/ABAXNWJPJjCGXX__1PSDCw" }
+                ]
+            };
+
+            wData[folderId].forEach(item => {
                 const imgTag = `<img src="${item.src}" class="w-full rounded-lg shadow-sm border border-gray-200/50 dark:border-gray-700/50 mb-4 transition-transform hover:scale-[1.01]" loading="lazy">`;
                 if(item.link) {
                     container.innerHTML += `<a href="${item.link}" target="_blank" class="block cursor-pointer" title="点击跳转查看">${imgTag}</a>`;
@@ -1870,12 +2007,10 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             toggleLanguage(); 
-            initOrbitImagesDom(); 
-            renderOrbitTick(); 
+            initImageTrail();
+            initGameCardSwap();
             setTimeout(typeLine1, 800); 
         });
-
-        window.addEventListener('resize', syncOrbitTrackBounds);
 
         const cursor = document.getElementById('magic-cursor');
         const trail = document.getElementById('cursor-trail');
@@ -1899,13 +2034,13 @@
         animateTrailLoop();
 
         document.body.addEventListener('mouseenter', (e) => {
-            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-card-node, .video-card-node, .folder-wrapper')) {
+            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-swap-card, .video-card-node, .folder-wrapper, .content__img, canvas')) {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
                 cursor.style.background = 'rgba(39, 97, 255, 0.05)';
             }
         }, true);
         document.body.addEventListener('mouseleave', (e) => {
-            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-card-node, .video-card-node, .folder-wrapper')) {
+            if(e.target.matches && e.target.matches('a, button, .polaroid, .flip-card, .orbit-item, textarea, [onclick], .about-card, .game-swap-card, .video-card-node, .folder-wrapper, .content__img, canvas')) {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1)';
                 cursor.style.background = 'rgba(39, 97, 255, 0.25)';
             }
